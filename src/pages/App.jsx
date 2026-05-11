@@ -10,6 +10,7 @@ import SearchMatches         from "./SearchMatches";
 import SearchPlace           from "./SearchPlace";
 import Statistics            from "./Statistics";
 import About                 from "./About";
+import ReportesPersonas      from "./ReportesPersonas";
 
 const GlobalStyle = () => (
   <style>{`
@@ -53,6 +54,7 @@ export default function App() {
           {page === "search-matches" && <SearchMatches      setPage={setPage}/>}
           {page === "search-place"   && <SearchPlace        setPage={setPage}/>}
           {page === "statistics"     && <Statistics         setPage={setPage}/>}
+          {page === "reportes"       && <ReportesPersonas   setPage={setPage}/>}
           {page === "about"          && <About              setPage={setPage}/>}
         </main>
         <Footer setPage={setPage}/>
