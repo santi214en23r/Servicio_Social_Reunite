@@ -11,6 +11,7 @@ import SearchPlace           from "./SearchPlace";
 import Statistics            from "./Statistics";
 import About                 from "./About";
 import ReportesPersonas      from "./ReportesPersonas";
+import GaleriaImagenes       from "./GaleriaImagenes";
 
 const GlobalStyle = () => (
   <style>{`
@@ -55,6 +56,7 @@ export default function App() {
           {page === "search-place"   && <SearchPlace        setPage={setPage}/>}
           {page === "statistics"     && <Statistics         setPage={setPage}/>}
           {page === "reportes"       && <ReportesPersonas   setPage={setPage}/>}
+          {page === "galeria"        && <GaleriaImagenes    setPage={setPage}/>}
           {page === "about"          && <About              setPage={setPage}/>}
         </main>
         <Footer setPage={setPage}/>

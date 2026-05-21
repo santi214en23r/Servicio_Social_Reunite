@@ -248,7 +248,7 @@ const ReportesPersonas = ({ setPage }) => {
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         ) : error ? (
-          <InfoBox type="error">{error}</InfoBox>
+          <InfoBox type="danger">{error}</InfoBox>
         ) : reportesFiltrados.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 20px", background: C.white, border: `1px solid ${C.gray200}`, borderRadius: "2px" }}>
             <Search size={48} style={{ margin: "0 auto 16px", color: C.gray300 }} />

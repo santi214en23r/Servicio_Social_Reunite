@@ -33,6 +33,7 @@ export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
   const userLinks = [
     { id:"home",           label:"Inicio" },
     { id:"reportes",       label:"Reportes" },
+    { id:"galeria",        label:"Imágenes" },
     { id:"search-matches", label:"Búsqueda" },
     { id:"add-person",     label:"Reporte" },
     { id:"statistics",     label:"Estadística" },
@@ -41,6 +42,7 @@ export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
   const assocLinks = [
     { id:"dash-assoc",     label:"Panel" },
     { id:"reportes",       label:"Reportes" },
+    { id:"galeria",        label:"Imágenes" },
     { id:"add-person",     label:"Subir Persona" },
     { id:"search-place",   label:"Lugar de Búsqueda" },
     { id:"search-matches", label:"Coincidencias" },
