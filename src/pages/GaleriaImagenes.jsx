@@ -5,7 +5,8 @@ import { supabase } from "../supabaseClient";
 import { Image, MapPin, Calendar, Search, Filter, ChevronRight, X, Download, Maximize2 } from "lucide-react";
 
 const GaleriaImagenes = ({ setPage }) => {
-  const [imagenes, setImagenes] = useState([]);
+  const [imagenesDron, setImagenesDron] = useState([]);
+  const [imagenesSubidas, setImagenesSubidas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("dron"); // "dron" o "subida"
@@ -24,9 +25,9 @@ const GaleriaImagenes = ({ setPage }) => {
     return "/" + urlImagen;
   };
 
-  // Cargar imágenes desde Supabase
+  // Cargar imágenes de dron
   useEffect(() => {
-    const cargarImagenes = async () => {
+    const cargarImagenesDron = async () => {
       try {
         setLoading(true);
         const { data, error: err } = await supabase
@@ -35,11 +36,11 @@ const GaleriaImagenes = ({ setPage }) => {
           .order("fecha_tomada", { ascending: false });
 
         if (err) throw err;
-        console.log("Imágenes cargadas:", data);
-        setImagenes(data || []);
+        console.log("Imágenes de dron cargadas:", data);
+        setImagenesDron(data || []);
         setError(null);
       } catch (err) {
-        console.error("Error cargando imágenes:", err);
+        console.error("Error cargando imágenes de dron:", err);
         setError("Error al cargar las imágenes. Por favor intenta más tarde.");
       } finally {
         setLoading(false);
@@ -47,9 +48,39 @@ const GaleriaImagenes = ({ setPage }) => {
     };
 
     if (tab === "dron") {
-      cargarImagenes();
+      cargarImagenesDron();
     }
   }, [tab]);
+
+  // Cargar imágenes subidas
+  useEffect(() => {
+    const cargarImagenesSubidas = async () => {
+      try {
+        setLoading(true);
+        const { data, error: err } = await supabase
+          .from("imagenes_subidas")
+          .select("*")
+          .order("fecha_tomada", { ascending: false });
+
+        if (err) throw err;
+        console.log("Imágenes subidas cargadas:", data);
+        setImagenesSubidas(data || []);
+        setError(null);
+      } catch (err) {
+        console.error("Error cargando imágenes subidas:", err);
+        setError("Error al cargar las imágenes subidas. Por favor intenta más tarde.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (tab === "subida") {
+      cargarImagenesSubidas();
+    }
+  }, [tab]);
+
+  // Seleccionar imágenes según tab
+  const imagenes = tab === "dron" ? imagenesDron : imagenesSubidas;
 
   // Obtener ubicaciones únicas
   const ubicaciones = ["todas", ...new Set(imagenes.map(img => img.lugar).filter(Boolean))];
@@ -108,8 +139,8 @@ const GaleriaImagenes = ({ setPage }) => {
         {/* Tabs */}
         <div style={{ display: "flex", gap: "8px", marginBottom: "32px", borderBottom: `1px solid ${C.gray200}` }}>
           {[
-            { id: "dron", label: "📷 Imágenes de Dron", count: imagenes.length },
-            { id: "subida", label: "📤 Imágenes Subidas", count: 0 },
+            { id: "dron", label: "📷 Imágenes de Dron", count: imagenesDron.length },
+            { id: "subida", label: "📤 Imágenes Subidas", count: imagenesSubidas.length },
           ].map(t => (
             <button
               key={t.id}
@@ -272,10 +303,13 @@ const GaleriaImagenes = ({ setPage }) => {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "20px" }}>
                 {imagenesFiltradas.map((imagen) => (
                   <TarjetaImagen
-                    key={imagen.id}
+                    key={imagen.url_imagen}
                     imagen={imagen}
                     onSelect={() => setSelectedImagen(imagen)}
-                    formatearFecha={formatearFecha}                    obtenerURLImagen={obtenerURLImagen}                  />
+                    formatearFecha={formatearFecha}
+                    obtenerURLImagen={obtenerURLImagen}
+                    tipo="dron"
+                  />
                 ))}
               </div>
             )}
@@ -284,18 +318,133 @@ const GaleriaImagenes = ({ setPage }) => {
 
         {/* Contenido Tab Subidas */}
         {tab === "subida" && (
-          <div style={{ textAlign: "center", padding: "60px 20px", background: C.white, border: `1px solid ${C.gray200}`, borderRadius: "2px" }}>
-            <div style={{ width: "80px", height: "80px", background: C.tealBg, borderRadius: "50%", margin: "0 auto 24px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Image size={40} color={C.teal} />
+          <>
+            {/* Estadísticas */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "32px" }}>
+              <div style={{ background: C.white, border: `1px solid ${C.gray200}`, borderTop: `3px solid ${C.teal}`, padding: "20px", borderRadius: "2px" }}>
+                <div style={{ fontSize: "13px", color: C.gray600, fontFamily: fontSans, fontWeight: 600, marginBottom: "8px", textTransform: "uppercase", letterSpacing: ".03em" }}>
+                  Total de Imágenes
+                </div>
+                <div style={{ fontSize: "28px", fontWeight: 700, color: C.teal, fontFamily: fontMono }}>
+                  {estadisticas.total}
+                </div>
+              </div>
+              <div style={{ background: C.white, border: `1px solid ${C.gray200}`, borderTop: `3px solid ${C.wine}`, padding: "20px", borderRadius: "2px" }}>
+                <div style={{ fontSize: "13px", color: C.gray600, fontFamily: fontSans, fontWeight: 600, marginBottom: "8px", textTransform: "uppercase", letterSpacing: ".03em" }}>
+                  Ubicaciones
+                </div>
+                <div style={{ fontSize: "28px", fontWeight: 700, color: C.wine, fontFamily: fontMono }}>
+                  {ubicaciones.length - 1}
+                </div>
+              </div>
             </div>
-            <p style={{ fontFamily: fontSans, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "8px" }}>Sin imágenes subidas</p>
-            <p style={{ fontFamily: fontSans, fontSize: "14px", color: C.gray600, maxWidth: "400px", margin: "0 auto", lineHeight: 1.6 }}>
-              Por el momento no hay imágenes subidas por usuarios. Las imágenes capturadas por dron están disponibles en la pestaña anterior.
-            </p>
-            <GovBtn onClick={() => setTab("dron")} style={{ marginTop: "24px" }}>
-              Ver Imágenes de Dron
-            </GovBtn>
-          </div>
+
+            {/* Buscador y Filtros */}
+            <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "24px", marginBottom: "32px", borderRadius: "2px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "16px", alignItems: "flex-end" }}>
+                <div>
+                  <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+                    Buscar por Descripción
+                  </label>
+                  <div style={{ position: "relative" }}>
+                    <Search size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: C.gray400 }} />
+                    <input
+                      type="text"
+                      placeholder="Ingresa búsqueda..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "10px 12px 10px 36px",
+                        border: `1px solid ${C.gray200}`,
+                        borderRadius: "2px",
+                        fontFamily: fontSans,
+                        fontSize: "13px",
+                        outline: "none",
+                        background: C.white,
+                        color: C.gray800,
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = C.teal}
+                      onBlur={(e) => e.target.style.borderColor = C.gray200}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+                    Lugar
+                  </label>
+                  <select
+                    value={filtroUbicacion}
+                    onChange={(e) => setFiltroUbicacion(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      border: `1px solid ${C.gray200}`,
+                      borderRadius: "2px",
+                      fontFamily: fontSans,
+                      fontSize: "13px",
+                      background: C.white,
+                      color: C.gray800,
+                      outline: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {ubicaciones.map(ub => (
+                      <option key={ub} value={ub}>
+                        {ub === "todas" ? "Todos los lugares" : ub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <GovBtn
+                    variant="secondary"
+                    onClick={() => {
+                      setSearchTerm("");
+                      setFiltroUbicacion("todas");
+                    }}
+                  >
+                    Limpiar
+                  </GovBtn>
+                </div>
+              </div>
+              <div style={{ marginTop: "16px", fontSize: "13px", color: C.gray600, fontFamily: fontSans }}>
+                Se encontraron <strong>{imagenesFiltradas.length}</strong> de <strong>{imagenes.length}</strong> imágenes subidas
+              </div>
+            </div>
+
+            {/* Galería */}
+            {loading ? (
+              <div style={{ textAlign: "center", padding: "60px 20px" }}>
+                <div style={{ marginBottom: "16px" }}>
+                  <div style={{ width: "40px", height: "40px", border: `3px solid ${C.gray200}`, borderTop: `3px solid ${C.teal}`, borderRadius: "50%", margin: "0 auto", animation: "spin 1s linear infinite" }} />
+                </div>
+                <p style={{ fontFamily: fontSans, color: C.gray600 }}>Cargando imágenes subidas...</p>
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+              </div>
+            ) : error ? (
+              <InfoBox type="danger">{error}</InfoBox>
+            ) : imagenesFiltradas.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "60px 20px", background: C.white, border: `1px solid ${C.gray200}`, borderRadius: "2px" }}>
+                <Image size={48} style={{ margin: "0 auto 16px", color: C.gray300 }} />
+                <p style={{ fontFamily: fontSans, fontSize: "16px", color: C.gray600, marginBottom: "8px" }}>No se encontraron imágenes</p>
+                <p style={{ fontFamily: fontSans, fontSize: "13px", color: C.gray500 }}>Intenta ajustar tus criterios de búsqueda o filtros</p>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "20px" }}>
+                {imagenesFiltradas.map((imagen) => (
+                  <TarjetaImagen
+                    key={imagen.url_imagen}
+                    imagen={imagen}
+                    onSelect={() => setSelectedImagen(imagen)}
+                    formatearFecha={formatearFecha}
+                    obtenerURLImagen={obtenerURLImagen}
+                    tipo="subida"
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -306,6 +455,7 @@ const GaleriaImagenes = ({ setPage }) => {
           onClose={() => setSelectedImagen(null)}
           formatearFecha={formatearFecha}
           obtenerURLImagen={obtenerURLImagen}
+          tipo={tab}
         />
       )}
     </div>
@@ -313,7 +463,7 @@ const GaleriaImagenes = ({ setPage }) => {
 };
 
 // Componente Tarjeta de Imagen
-const TarjetaImagen = ({ imagen, onSelect, formatearFecha, obtenerURLImagen }) => {
+const TarjetaImagen = ({ imagen, onSelect, formatearFecha, obtenerURLImagen, tipo = "dron" }) => {
   const [hover, setHover] = useState(false);
 
   return (
@@ -357,7 +507,7 @@ const TarjetaImagen = ({ imagen, onSelect, formatearFecha, obtenerURLImagen }) =
           borderRadius: "2px",
           textTransform: "uppercase",
         }}>
-          📷 Dron
+          {tipo === "dron" ? "📷 Dron" : "📤 Subida"}
         </div>
         {hover && (
           <div style={{
@@ -380,7 +530,7 @@ const TarjetaImagen = ({ imagen, onSelect, formatearFecha, obtenerURLImagen }) =
       <div style={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Nombre/URL */}
         <h3 style={{ fontFamily: font, fontSize: "14px", fontWeight: 700, color: C.gray900, marginBottom: "8px", lineHeight: 1.3, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-          Imagen de Dron
+          {tipo === "dron" ? "Imagen de Dron" : "Imagen Subida"}
         </h3>
 
         {/* Descripción */}
@@ -436,7 +586,7 @@ const TarjetaImagen = ({ imagen, onSelect, formatearFecha, obtenerURLImagen }) =
 };
 
 // Componente Modal
-const ModalImagen = ({ imagen, onClose, formatearFecha, obtenerURLImagen }) => {
+const ModalImagen = ({ imagen, onClose, formatearFecha, obtenerURLImagen, tipo = "dron" }) => {
   return (
     <>
       {/* Overlay */}
@@ -540,11 +690,19 @@ const ModalImagen = ({ imagen, onClose, formatearFecha, obtenerURLImagen }) => {
                   {imagen.fecha_tomada ? formatearFecha(imagen.fecha_tomada) : "No especificada"}
                 </div>
               </div>
-              {imagen.usuario && (
+              {tipo === "dron" && imagen.usuario && (
                 <div>
                   <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Capturada por</div>
                   <div style={{ fontSize: "13px", color: C.gray800, fontFamily: fontSans }}>
                     {imagen.usuario}
+                  </div>
+                </div>
+              )}
+              {tipo === "subida" && imagen.organizacion && (
+                <div>
+                  <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Organización</div>
+                  <div style={{ fontSize: "13px", color: C.gray800, fontFamily: fontSans }}>
+                    {imagen.organizacion}
                   </div>
                 </div>
               )}
