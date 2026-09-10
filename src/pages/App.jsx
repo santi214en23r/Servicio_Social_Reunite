@@ -15,12 +15,21 @@ import GaleriaImagenes       from "./GaleriaImagenes";
 
 const GlobalStyle = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Merriweather:wght@400;700;900&family=Open+Sans:wght@400;500;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Source Sans 3', sans-serif; background: #F9FAFB; color: #1F2937; }
-    ::selection { background: #00847F33; color: #00847F; }
+    body { font-family: 'Open Sans', sans-serif; background: #F7F9FB; color: #20364D; }
+    ::selection { background: #005B9633; color: #0B3B6E; }
     button { cursor: pointer; font-family: inherit; }
     input, select, textarea { font-family: inherit; }
+    input:focus, select:focus, textarea:focus { outline: 3px solid #005B9626; outline-offset: 1px; }
+    ::placeholder { color: #8A98A6; }
+    @media (max-width: 760px) {
+      .reunite-nav-links { overflow-x: auto; width: 100%; }
+      .reunite-nav-actions { display: none !important; }
+      .reunite-header-search { display: none !important; }
+      .reunite-page-grid { grid-template-columns: 1fr !important; }
+      .reunite-stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
     @keyframes fadeUp  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
     @keyframes slideIn { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
     @keyframes pulseDot { 0%,100% { opacity:1; } 50% { opacity:.4; } }
@@ -32,7 +41,7 @@ const GlobalStyle = () => (
     .delay-4  { animation-delay:.32s; }
     ::-webkit-scrollbar { width:6px; }
     ::-webkit-scrollbar-track { background:#f1f1f1; }
-    ::-webkit-scrollbar-thumb { background:#9CA3AF; border-radius:3px; }
+    ::-webkit-scrollbar-thumb { background:#8A98A6; border-radius:3px; }
   `}</style>
 );
 

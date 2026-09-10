@@ -44,7 +44,7 @@ export const GovCard = ({ children, style = {}, onClick }) => {
   const [hov, setHov] = useState(false);
   return (
     <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={onClick}
-      style={{ background:C.white, border:`1px solid ${hov?C.teal+"55":C.gray200}`, borderTop:`3px solid ${hov?C.teal:C.gray200}`, boxShadow:hov?"0 4px 20px rgba(0,132,127,.1)":"0 1px 4px rgba(0,0,0,.06)", transition:"all .25s", cursor:onClick?"pointer":"default", ...style }}>
+      style={{ background:C.white, border:`1px solid ${hov?C.teal+"55":C.gray200}`, borderTop:`3px solid ${hov?C.teal:C.gray200}`, boxShadow:hov?"0 4px 20px rgba(0,91,150,.12)":"0 1px 4px rgba(6,39,70,.06)", transition:"all .25s", cursor:onClick?"pointer":"default", ...style }}>
       {children}
     </div>
   );

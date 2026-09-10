@@ -3,7 +3,7 @@ import { GovLogo } from "./components";
 
 export const Footer = ({ setPage }) => (
   <footer>
-    <div style={{ background:C.teal, height:"4px" }}/>
+    <div style={{ background:C.gold, height:"4px" }}/>
     <div style={{ background:C.wineD, padding:"40px 24px 20px" }}>
       <div style={{ maxWidth:"1200px", margin:"0 auto" }}>
         <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr", gap:"40px", marginBottom:"32px" }}>

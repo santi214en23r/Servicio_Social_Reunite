@@ -1,4 +1,8 @@
 import { useState, useEffect } from "react";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  CartesianGrid, PieChart, Pie, Cell, Legend,
+} from "recharts";
 import { C, font, fontSans, fontMono } from "../shared/theme";
 import { GovBtn, SectionHeader, GovCard, Tag, InfoBox } from "../shared/components";
 import { supabase } from "../supabaseClient";
@@ -12,6 +16,7 @@ const ReportesPersonas = ({ setPage }) => {
   const [selectedReporte, setSelectedReporte] = useState(null);
   const [filtroSexo, setFiltroSexo] = useState("todos");
   const [ordenamiento, setOrdenamiento] = useState("reciente");
+  const [activeTab, setActiveTab] = useState("reportes");
 
   // Cargar reportes desde Supabase
   useEffect(() => {
@@ -111,6 +116,38 @@ const ReportesPersonas = ({ setPage }) => {
       </div>
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+        {/* Pestañas de contenido */}
+        <div style={{ display: "flex", gap: "4px", borderBottom: `1px solid ${C.gray200}`, marginBottom: "24px" }}>
+          {[
+            { id: "reportes", label: "Listado de reportes" },
+            { id: "estadisticas", label: "Estadísticas" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                background: activeTab === tab.id ? C.white : "transparent",
+                color: activeTab === tab.id ? C.wine : C.gray600,
+                border: "none",
+                borderBottom: activeTab === tab.id ? `3px solid ${C.wine}` : "3px solid transparent",
+                padding: "12px 18px",
+                fontFamily: fontSans,
+                fontSize: "12px",
+                fontWeight: 700,
+                letterSpacing: ".04em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "estadisticas" ? (
+          <ReportesStatistics reportes={reportes} loading={loading} />
+        ) : (
+          <>
         {/* Estadísticas rápidas */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginBottom: "32px" }}>
           {[
@@ -268,6 +305,8 @@ const ReportesPersonas = ({ setPage }) => {
             ))}
           </div>
         )}
+          </>
+        )}
       </div>
 
       {/* Modal de Detalle */}
@@ -280,6 +319,112 @@ const ReportesPersonas = ({ setPage }) => {
           tieneImagen={tieneImagen}
         />
       )}
+    </div>
+  );
+};
+
+const ReportesStatistics = ({ reportes, loading }) => {
+  const ageGroups = [
+    { label: "0–17", min: 0, max: 17 },
+    { label: "18–30", min: 18, max: 30 },
+    { label: "31–50", min: 31, max: 50 },
+    { label: "51–70", min: 51, max: 70 },
+    { label: "71+", min: 71, max: Infinity },
+  ];
+  const ageData = ageGroups.map(({ label, min, max }) => ({
+    grupo: label,
+    reportes: reportes.filter((reporte) => {
+      const age = Number(reporte.edad_actual);
+      return Number.isFinite(age) && age >= min && age <= max;
+    }).length,
+  }));
+  const sexData = [
+    { name: "Hombres", value: reportes.filter((reporte) => reporte.sexo === "HOMBRE").length },
+    { name: "Mujeres", value: reportes.filter((reporte) => reporte.sexo === "MUJER").length },
+    { name: "Otro / No especificado", value: reportes.filter((reporte) => !["HOMBRE", "MUJER"].includes(reporte.sexo)).length },
+  ].filter((item) => item.value > 0);
+  const places = Object.entries(reportes.reduce((counts, reporte) => {
+    const place = reporte.lugar_hechos?.trim() || "No especificado";
+    counts[place] = (counts[place] || 0) + 1;
+    return counts;
+  }, {}))
+    .sort(([, first], [, second]) => second - first)
+    .slice(0, 6)
+    .map(([lugar, total]) => ({ lugar, reportes: total }));
+  const chartColors = [C.wine, C.teal, C.gold];
+  const tooltipStyle = { fontFamily: fontSans, fontSize: "12px", border: `1px solid ${C.gray200}`, borderRadius: "0" };
+  const axisStyle = { fontFamily: fontSans, fontSize: 11, fill: C.gray600 };
+
+  if (loading) {
+    return <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "60px 20px", textAlign: "center", color: C.gray600, fontFamily: fontSans }}>Cargando estadísticas...</div>;
+  }
+
+  return (
+    <div>
+      <div style={{ marginBottom: "24px" }}>
+        <SectionHeader
+          label="Análisis de reportes"
+          title="Distribución de personas reportadas"
+          sub="Consulta los reportes registrados por grupo de edad, sexo y lugar de los hechos. Los datos se actualizan junto con el listado nacional."
+        />
+      </div>
+
+      <div className="reunite-page-grid" style={{ display: "grid", gridTemplateColumns: "1.35fr .85fr", gap: "16px", marginBottom: "16px" }}>
+        <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "20px" }}>
+          <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gray600, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "4px" }}>DISTRIBUCIÓN POR EDAD</div>
+          <div style={{ fontFamily: font, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "16px" }}>Reportes por grupo de edad</div>
+          <ResponsiveContainer width="100%" height={260}>
+            <BarChart data={ageData}>
+              <CartesianGrid strokeDasharray="3 3" stroke={C.gray100} vertical={false} />
+              <XAxis dataKey="grupo" axisLine={false} tickLine={false} tick={axisStyle} />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisStyle} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Bar dataKey="reportes" name="Reportes" fill={C.teal} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "20px" }}>
+          <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gray600, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "4px" }}>DISTRIBUCIÓN POR SEXO</div>
+          <div style={{ fontFamily: font, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "4px" }}>Personas reportadas</div>
+          {sexData.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={210}>
+                <PieChart>
+                  <Pie data={sexData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={52} outerRadius={78}>
+                    {sexData.map((item, index) => <Cell key={item.name} fill={chartColors[index % chartColors.length]} />)}
+                  </Pie>
+                  <Tooltip contentStyle={tooltipStyle} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}>
+                {sexData.map((item, index) => (
+                  <div key={item.name} style={{ display: "flex", alignItems: "center", gap: "5px", fontFamily: fontSans, fontSize: "11px", color: C.gray700 }}>
+                    <span style={{ width: "9px", height: "9px", background: chartColors[index % chartColors.length] }} />
+                    {item.name}: <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : <div style={{ padding: "70px 10px", textAlign: "center", color: C.gray600, fontFamily: fontSans, fontSize: "13px" }}>Sin datos de sexo disponibles.</div>}
+        </div>
+      </div>
+
+      <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "20px", marginBottom: "24px" }}>
+        <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gray600, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "4px" }}>LUGARES CON MÁS REPORTES</div>
+        <div style={{ fontFamily: font, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "16px" }}>Distribución por lugar de los hechos</div>
+        {places.length > 0 ? (
+          <ResponsiveContainer width="100%" height={Math.max(220, places.length * 42)}>
+            <BarChart data={places} layout="vertical" margin={{ left: 12, right: 12 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={C.gray100} horizontal={false} />
+              <XAxis type="number" allowDecimals={false} axisLine={false} tickLine={false} tick={axisStyle} />
+              <YAxis type="category" dataKey="lugar" width={150} axisLine={false} tickLine={false} tick={{ ...axisStyle, fontSize: 10 }} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Bar dataKey="reportes" name="Reportes" fill={C.wine} />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : <div style={{ padding: "40px 10px", textAlign: "center", color: C.gray600, fontFamily: fontSans, fontSize: "13px" }}>Sin datos de ubicación disponibles.</div>}
+      </div>
     </div>
   );
 };

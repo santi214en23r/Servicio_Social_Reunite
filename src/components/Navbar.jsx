@@ -2,17 +2,6 @@ import { useState } from "react";
 import { C, font, fontSans } from "../shared/theme";
 import { GovLogo } from "../shared/components";
 
-const GovTopBar = () => (
-  <div style={{ background:C.wineD, height:"32px", display:"flex", alignItems:"center", justifyContent:"flex-end", padding:"0 24px", gap:"16px" }}>
-    {["Trámites","Gobierno","Contacto"].map(l => (
-      <span key={l} style={{ fontFamily:fontSans, fontSize:"11px", color:"rgba(255,255,255,.75)", fontWeight:500, letterSpacing:".03em", cursor:"pointer" }}
-        onMouseEnter={e=>e.target.style.color="#fff"} onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.75)"}>{l}</span>
-    ))}
-    <span style={{ color:"rgba(255,255,255,.3)", fontSize:"11px" }}>|</span>
-    <span style={{ fontFamily:fontSans, fontSize:"11px", color:"rgba(255,255,255,.75)", letterSpacing:".03em" }}>gob.mx</span>
-  </div>
-);
-
 const NavLink = ({ children, active, onClick }) => (
   <button onClick={onClick} style={{ background:active?"rgba(255,255,255,.2)":"transparent", border:"none", color:C.white, padding:"14px 14px", fontSize:"12.5px", fontFamily:fontSans, fontWeight:active?700:500, letterSpacing:".04em", textTransform:"uppercase", borderBottom:active?`3px solid ${C.white}`:"3px solid transparent", transition:"all .2s", cursor:"pointer" }}
     onMouseEnter={e=>{ if(!active) e.currentTarget.style.background="rgba(255,255,255,.1)"; }}
@@ -52,13 +41,12 @@ export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
 
   return (
     <>
-      <GovTopBar />
       {/* Logo + buscador */}
-      <div style={{ background:C.white, borderBottom:`1px solid ${C.gray200}`, padding:"0 24px", height:"60px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+      <div style={{ background:C.white, borderBottom:`1px solid ${C.gray200}`, padding:"0 24px", height:"64px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
         <button onClick={()=>setPage(isAssoc?"dash-assoc":"home")} style={{background:"none",border:"none"}}>
           <GovLogo size={38}/>
         </button>
-        <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+        <div className="reunite-header-search" style={{ display:"flex", alignItems:"center", gap:"8px" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"6px", border:`1px solid ${C.gray200}`, borderRadius:"4px", padding:"6px 12px", background:C.gray50 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gray400} strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input placeholder="Buscar en el sitio…" style={{ border:"none", background:"transparent", outline:"none", fontSize:"13px", fontFamily:fontSans, color:C.gray800, width:"180px" }}/>
@@ -67,11 +55,11 @@ export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
         </div>
       </div>
       {/* Nav links */}
-      <nav style={{ background:C.teal, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 20px", position:"sticky", top:0, zIndex:50, boxShadow:"0 2px 8px rgba(0,0,0,.15)" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"2px" }}>
+      <nav style={{ background:C.wine, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 20px", position:"sticky", top:0, zIndex:50, boxShadow:"0 2px 8px rgba(6,39,70,.18)" }}>
+        <div className="reunite-nav-links" style={{ display:"flex", alignItems:"center", gap:"2px" }}>
           {links.map(l => <NavLink key={l.id} active={page===l.id} onClick={()=>setPage(l.id)}>{l.label}</NavLink>)}
         </div>
-        <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+        <div className="reunite-nav-actions" style={{ display:"flex", alignItems:"center", gap:"8px" }}>
           <QuickBtn icon="" label="Llámanos" onClick={()=>{}}/>
           <QuickBtn icon="" label="Reporte" onClick={()=>setPage("add-person")} accent/>
           <QuickBtn icon="" label="Consulta" onClick={()=>setPage("search-matches")}/>

@@ -38,9 +38,9 @@ const DashUser = ({ setPage }) => {
     <div>
       {/* ── Hero ── */}
       <div style={{
-        background:`linear-gradient(105deg, ${C.wineD} 0%, ${C.wine} 40%, #8B0040 100%)`,
+        background:`linear-gradient(105deg, ${C.wineD} 0%, ${C.wine} 40%, ${C.teal} 100%)`,
         position:"relative", overflow:"hidden", minHeight:"400px", display:"flex", alignItems:"center",
-        backgroundImage:`repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,.018) 10px,rgba(0,0,0,.018) 11px), linear-gradient(105deg,${C.wineD} 0%,${C.wine} 40%,#8B0040 100%)`
+        backgroundImage:`repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.018) 10px,rgba(255,255,255,.018) 11px), linear-gradient(105deg,${C.wineD} 0%,${C.wine} 40%,${C.teal} 100%)`
       }}>
         <div style={{ position:"absolute", right:0, top:0, width:"45%", height:"100%", background:`linear-gradient(135deg,transparent 0%,${C.teal}22 100%)`, borderLeft:`2px solid ${C.teal}44` }}/>
         <div style={{ position:"absolute", right:"5%", top:"10%", width:"300px", height:"300px", borderRadius:"50%", border:`1px solid ${C.teal}22` }}/>
@@ -84,7 +84,7 @@ const DashUser = ({ setPage }) => {
       <PageWrap>
         <div style={{ marginTop:"8px" }}>
           <SectionHeader label="Servicios disponibles" title="¿Cómo podemos ayudarte?" sub="REUNITE ofrece herramientas especializadas para la búsqueda de personas desaparecidas. Selecciona la opción que mejor se adapte a tu situación."/>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))", gap:"16px" }}>
+          <div className="reunite-page-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))", gap:"16px" }}>
             {actions.map((a,i) => (
               <GovCard key={i} style={{ padding:"24px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"14px" }}>
@@ -102,7 +102,7 @@ const DashUser = ({ setPage }) => {
         <Divider/>
 
         {/* ── About / protocols ── */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"32px", alignItems:"start" }}>
+        <div className="reunite-page-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"32px", alignItems:"start" }}>
           <div>
             <SectionHeader label="Sobre la plataforma" title="¿Qué es REUNITE?" accent/>
             <p style={{ fontFamily:fontSans, fontSize:"14px", color:C.gray700, lineHeight:1.8, marginBottom:"16px" }}>REUNITE es una plataforma tecnológica basada en inteligencia artificial diseñada para mejorar la búsqueda y localización de personas desaparecidas en México. Analiza datos de diversas fuentes, incluyendo bases públicas y reportes de colectivos de búsqueda.</p>
