@@ -13,6 +13,7 @@ const GaleriaImagenes = ({ setPage }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImagen, setSelectedImagen] = useState(null);
   const [filtroUbicacion, setFiltroUbicacion] = useState("todas");
+  const [filtroOrganizacion, setFiltroOrganizacion] = useState("todas");
 
   // Función para construir URL válida
   const obtenerURLImagen = (urlImagen) => {
@@ -84,13 +85,15 @@ const GaleriaImagenes = ({ setPage }) => {
 
   // Obtener ubicaciones únicas
   const ubicaciones = ["todas", ...new Set(imagenes.map(img => img.lugar).filter(Boolean))];
+  const organizaciones = ["todas", ...new Set(imagenesSubidas.map(img => img.organizacion).filter(Boolean))];
 
   // Filtrar imágenes
   const imagenesFiltradas = imagenes
     .filter(img => {
       const matchSearch = !searchTerm || (img.descripcion && img.descripcion.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchUbicacion = filtroUbicacion === "todas" || img.lugar === filtroUbicacion;
-      return matchSearch && matchUbicacion;
+      const matchOrganizacion = tab === "dron" || filtroOrganizacion === "todas" || img.organizacion === filtroOrganizacion;
+      return matchSearch && matchUbicacion && matchOrganizacion;
     });
 
   const estadisticas = {
@@ -269,6 +272,7 @@ const GaleriaImagenes = ({ setPage }) => {
                     onClick={() => {
                       setSearchTerm("");
                       setFiltroUbicacion("todas");
+                      setFiltroOrganizacion("todas");
                     }}
                   >
                     Limpiar
@@ -341,7 +345,7 @@ const GaleriaImagenes = ({ setPage }) => {
 
             {/* Buscador y Filtros */}
             <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "24px", marginBottom: "32px", borderRadius: "2px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "16px", alignItems: "flex-end" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "16px", alignItems: "flex-end" }}>
                 <div>
                   <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
                     Buscar por Descripción
@@ -396,12 +400,40 @@ const GaleriaImagenes = ({ setPage }) => {
                     ))}
                   </select>
                 </div>
+                <div>
+                  <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+                    Organización
+                  </label>
+                  <select
+                    value={filtroOrganizacion}
+                    onChange={(e) => setFiltroOrganizacion(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      border: `1px solid ${C.gray200}`,
+                      borderRadius: "2px",
+                      fontFamily: fontSans,
+                      fontSize: "13px",
+                      background: C.white,
+                      color: C.gray800,
+                      outline: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {organizaciones.map((organizacion) => (
+                      <option key={organizacion} value={organizacion}>
+                        {organizacion === "todas" ? "Todas las organizaciones" : organizacion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div style={{ textAlign: "right" }}>
                   <GovBtn
                     variant="secondary"
                     onClick={() => {
                       setSearchTerm("");
                       setFiltroUbicacion("todas");
+                      setFiltroOrganizacion("todas");
                     }}
                   >
                     Limpiar

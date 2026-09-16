@@ -10,14 +10,6 @@ const NavLink = ({ children, active, onClick }) => (
   </button>
 );
 
-const QuickBtn = ({ icon, label, onClick, accent }) => (
-  <button onClick={onClick} style={{ display:"flex", alignItems:"center", gap:"4px", background:accent?C.wine:"rgba(255,255,255,.12)", border:`1px solid ${accent?C.wine:"rgba(255,255,255,.25)"}`, color:C.white, padding:"5px 10px", borderRadius:"20px", fontSize:"11px", fontFamily:fontSans, fontWeight:600, letterSpacing:".04em", textTransform:"uppercase", cursor:"pointer", transition:"all .2s" }}
-    onMouseEnter={e=>e.currentTarget.style.background=accent?C.wineD:"rgba(255,255,255,.22)"}
-    onMouseLeave={e=>e.currentTarget.style.background=accent?C.wine:"rgba(255,255,255,.12)"}>
-    <span style={{fontSize:"12px"}}>{icon}</span>{label}
-  </button>
-);
-
 export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
   const userLinks = [
     { id:"home",           label:"Inicio" },
@@ -46,13 +38,7 @@ export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
         <button onClick={()=>setPage(isAssoc?"dash-assoc":"home")} style={{background:"none",border:"none"}}>
           <GovLogo size={38}/>
         </button>
-        <div className="reunite-header-search" style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:"6px", border:`1px solid ${C.gray200}`, borderRadius:"4px", padding:"6px 12px", background:C.gray50 }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gray400} strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input placeholder="Buscar en el sitio…" style={{ border:"none", background:"transparent", outline:"none", fontSize:"13px", fontFamily:fontSans, color:C.gray800, width:"180px" }}/>
-          </div>
-          <button style={{ background:C.teal, color:C.white, border:"none", padding:"7px 14px", borderRadius:"4px", fontSize:"12px", fontFamily:fontSans, fontWeight:600, letterSpacing:".04em" }}>BUSCAR</button>
-        </div>
+        <div className="reunite-header-search" style={{ display:"flex", alignItems:"center", gap:"8px" }}></div>
       </div>
       {/* Nav links */}
       <nav style={{ background:C.wine, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 20px", position:"sticky", top:0, zIndex:50, boxShadow:"0 2px 8px rgba(6,39,70,.18)" }}>
@@ -60,16 +46,11 @@ export const Navbar = ({ page, setPage, isAssoc, onLogout }) => {
           {links.map(l => <NavLink key={l.id} active={page===l.id} onClick={()=>setPage(l.id)}>{l.label}</NavLink>)}
         </div>
         <div className="reunite-nav-actions" style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-          <QuickBtn icon="" label="Llámanos" onClick={()=>{}}/>
-          <QuickBtn icon="" label="Reporte" onClick={()=>setPage("add-person")} accent/>
-          <QuickBtn icon="" label="Consulta" onClick={()=>setPage("search-matches")}/>
-          <QuickBtn icon="" label="Estadística" onClick={()=>setPage("statistics")}/>
-          {isAssoc && (
-            <button onClick={onLogout} style={{ marginLeft:"8px", background:"rgba(255,255,255,.15)", border:"1px solid rgba(255,255,255,.3)", color:C.white, fontSize:"11px", fontFamily:fontSans, fontWeight:600, padding:"5px 10px", borderRadius:"3px", letterSpacing:".04em" }}>CERRAR SESIÓN</button>
-          )}
-          {["f","𝕏","▶"].map((s,i) => (
-            <span key={i} style={{ color:"rgba(255,255,255,.8)", fontSize:"14px", padding:"4px 6px", cursor:"pointer", fontWeight:"bold" }}>{s}</span>
-          ))}
+          <div style={{ display:"flex", alignItems:"center", gap:"6px", border:`1px solid ${C.gray200}`, borderRadius:"4px", padding:"6px 12px", background:C.gray50 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gray400} strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input placeholder="Buscar en el sitio…" style={{ border:"none", background:"transparent", outline:"none", fontSize:"13px", fontFamily:fontSans, color:C.gray800, width:"180px" }}/>
+          </div>
+          <button style={{ background:C.teal, color:C.white, border:"none", padding:"7px 14px", borderRadius:"4px", fontSize:"12px", fontFamily:fontSans, fontWeight:600, letterSpacing:".04em" }}>BUSCAR</button>
         </div>
       </nav>
     </>

@@ -6,7 +6,7 @@ import {
 import { C, font, fontSans, fontMono } from "../shared/theme";
 import { GovBtn, SectionHeader, GovCard, Tag, InfoBox } from "../shared/components";
 import { supabase } from "../supabaseClient";
-import { Heart, MapPin, Users, Calendar, Search, Filter, ChevronRight } from "lucide-react";
+import { Heart, MapPin, Users, Calendar, Search, Filter, ChevronRight, LayoutGrid, List } from "lucide-react";
 
 const ReportesPersonas = ({ setPage }) => {
   const [reportes, setReportes] = useState([]);
@@ -15,8 +15,27 @@ const ReportesPersonas = ({ setPage }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedReporte, setSelectedReporte] = useState(null);
   const [filtroSexo, setFiltroSexo] = useState("todos");
+  const [filtroEdadDesaparicion, setFiltroEdadDesaparicion] = useState("");
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
   const [ordenamiento, setOrdenamiento] = useState("reciente");
   const [activeTab, setActiveTab] = useState("reportes");
+  const [vista, setVista] = useState("tarjetas");
+
+  const convertirFecha = (valor) => {
+    const coincidencia = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(valor);
+    if (!coincidencia) return "";
+
+    const [, dia, mes, año] = coincidencia;
+    const fecha = new Date(Date.UTC(Number(año), Number(mes) - 1, Number(dia)));
+    if (
+      fecha.getUTCFullYear() !== Number(año) ||
+      fecha.getUTCMonth() !== Number(mes) - 1 ||
+      fecha.getUTCDate() !== Number(dia)
+    ) return "";
+
+    return `${año}-${mes}-${dia}`;
+  };
 
   // Cargar reportes desde Supabase
   useEffect(() => {
@@ -49,7 +68,13 @@ const ReportesPersonas = ({ setPage }) => {
                          r.lugar_nacimiento.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          r.lugar_hechos.toLowerCase().includes(searchTerm.toLowerCase());
       const matchSexo = filtroSexo === "todos" || r.sexo === filtroSexo;
-      return matchSearch && matchSexo;
+      const matchEdad = filtroEdadDesaparicion === "" || Number(r.edad_desaparicion) === Number(filtroEdadDesaparicion);
+      const fechaRegistro = r.fecha_registro?.slice(0, 10) || "";
+      const fechaDesdeISO = convertirFecha(fechaDesde);
+      const fechaHastaISO = convertirFecha(fechaHasta);
+      const matchFechaDesde = fechaDesde === "" || (fechaDesdeISO !== "" && fechaRegistro >= fechaDesdeISO);
+      const matchFechaHasta = fechaHasta === "" || (fechaHastaISO !== "" && fechaRegistro <= fechaHastaISO);
+      return matchSearch && matchSexo && matchEdad && matchFechaDesde && matchFechaHasta;
     })
     .sort((a, b) => {
       if (ordenamiento === "reciente") return new Date(b.fecha_registro) - new Date(a.fecha_registro);
@@ -168,8 +193,47 @@ const ReportesPersonas = ({ setPage }) => {
         </div>
 
         {/* Buscador y Filtros */}
+        <div role="group" aria-label="Cambiar vista" style={{ display: "flex", border: `1px solid ${C.gray200}`, background: C.white }}>
+              {[
+                { id: "tarjetas", label: "Vista de tarjetas", Icon: LayoutGrid },
+                { id: "lista", label: "Vista de listado", Icon: List },
+              ].map(({ id, label, Icon }) => (
+                <button
+                  key={id}
+                  type="button"
+                  aria-label={label}
+                  aria-pressed={vista === id}
+                  onClick={() => setVista(id)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "8px 10px",
+                    border: "none",
+                    borderRight: id === "tarjetas" ? `1px solid ${C.gray200}` : "none",
+                    background: vista === id ? C.teal : C.white,
+                    color: vista === id ? C.white : C.gray600,
+                    cursor: "pointer",
+                  }}
+                >
+                  <Icon size={16} />
+                </button>
+              ))}
+            </div>
         <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "24px", marginBottom: "32px", borderRadius: "2px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "16px", alignItems: "flex-end" }}>
+          <style>{`
+            @media (max-width: 900px) {
+              .reunite-reportes-filters {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+              }
+            }
+            @media (max-width: 520px) {
+              .reunite-reportes-filters {
+                grid-template-columns: 1fr !important;
+              }
+            }
+          `}</style>
+          <div className="reunite-reportes-filters" style={{ display: "grid", gridTemplateColumns: "2fr repeat(5, 1fr)", gap: "16px", alignItems: "flex-end" }}>
             {/* Búsqueda */}
             <div>
               <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
@@ -197,6 +261,86 @@ const ReportesPersonas = ({ setPage }) => {
                   onBlur={(e) => e.target.style.borderColor = C.gray200}
                 />
               </div>
+            </div>
+
+            {/* Rango de fechas de registro */}
+            <div>
+              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+                Fecha desde
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={fechaDesde}
+                onChange={(e) => setFechaDesde(e.target.value)}
+                placeholder="dd/mm/aaaa"
+                maxLength={10}
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  border: `1px solid ${C.gray200}`,
+                  borderRadius: "2px",
+                  fontFamily: fontSans,
+                  fontSize: "13px",
+                  outline: "none",
+                  background: C.white,
+                  color: C.gray800,
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+                Fecha hasta
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={fechaHasta}
+                onChange={(e) => setFechaHasta(e.target.value)}
+                placeholder="dd/mm/aaaa"
+                maxLength={10}
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  border: `1px solid ${C.gray200}`,
+                  borderRadius: "2px",
+                  fontFamily: fontSans,
+                  fontSize: "13px",
+                  outline: "none",
+                  background: C.white,
+                  color: C.gray800,
+                }}
+              />
+            </div>
+
+            {/* Filtro por edad al desaparecer */}
+            <div>
+              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+                Edad al desaparecer
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="120"
+                placeholder="Ej. 25"
+                value={filtroEdadDesaparicion}
+                onChange={(e) => setFiltroEdadDesaparicion(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.currentTarget.blur();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  border: `1px solid ${C.gray200}`,
+                  borderRadius: "2px",
+                  fontFamily: fontSans,
+                  fontSize: "13px",
+                  outline: "none",
+                  background: C.white,
+                  color: C.gray800,
+                }}
+              />
             </div>
 
             {/* Filtro por Sexo */}
@@ -255,12 +399,15 @@ const ReportesPersonas = ({ setPage }) => {
             </div>
 
             {/* Botón Limpiar */}
-            <div style={{ textAlign: "right" }}>
+            <div style={{ textAlign: "left" }}>
               <GovBtn
                 variant="secondary"
                 onClick={() => {
                   setSearchTerm("");
                   setFiltroSexo("todos");
+                  setFiltroEdadDesaparicion("");
+                  setFechaDesde("");
+                  setFechaHasta("");
                   setOrdenamiento("reciente");
                 }}
               >
@@ -293,17 +440,35 @@ const ReportesPersonas = ({ setPage }) => {
             <p style={{ fontFamily: fontSans, fontSize: "13px", color: C.gray500 }}>Intenta ajustar tus criterios de búsqueda o filtros</p>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "20px" }}>
+          <>
+          <style>{`
+            @media (max-width: 600px) {
+              .reunite-reportes-lista .reunite-reporte-item-lista {
+                grid-template-columns: 1fr !important;
+              }
+              .reunite-reportes-lista .reunite-reporte-item-lista > div:first-child {
+                width: 100% !important;
+                height: 180px !important;
+                min-height: 0 !important;
+                border-right: none !important;
+                border-bottom: 1px solid ${C.gray200} !important;
+              }
+            }
+          `}</style>
+          <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "12px" }}> </div>
+          <div className={vista === "lista" ? "reunite-reportes-lista" : undefined} style={{ display: "grid", gridTemplateColumns: vista === "tarjetas" ? "repeat(auto-fill, minmax(320px, 1fr))" : "1fr", gap: "20px" }}>
             {reportesFiltrados.map((reporte) => (
               <ReporteCard
                 key={reporte.id}
                 reporte={reporte}
+                vista={vista}
                 onSelect={() => setSelectedReporte(reporte)}
                 calcularDiasDesaparecido={calcularDiasDesaparecido}
                 tieneImagen={tieneImagen}
               />
             ))}
           </div>
+          </>
         )}
           </>
         )}
@@ -430,7 +595,7 @@ const ReportesStatistics = ({ reportes, loading }) => {
 };
 
 // Componente Tarjeta de Reporte
-const ReporteCard = ({ reporte, onSelect, calcularDiasDesaparecido, tieneImagen }) => {
+const ReporteCard = ({ reporte, vista, onSelect, calcularDiasDesaparecido, tieneImagen }) => {
   const [hover, setHover] = useState(false);
 
   return (
@@ -438,6 +603,7 @@ const ReporteCard = ({ reporte, onSelect, calcularDiasDesaparecido, tieneImagen 
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onSelect}
+      className={vista === "lista" ? "reunite-reporte-item-lista" : undefined}
       style={{
         background: C.white,
         border: `1px solid ${hover ? C.teal + "55" : C.gray200}`,
@@ -447,19 +613,22 @@ const ReporteCard = ({ reporte, onSelect, calcularDiasDesaparecido, tieneImagen 
         cursor: "pointer",
         borderRadius: "2px",
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
+        display: vista === "lista" ? "grid" : "flex",
+        gridTemplateColumns: vista === "lista" ? "180px 1fr" : undefined,
+        flexDirection: vista === "tarjetas" ? "column" : undefined,
       }}
     >
       {/* Imagen */}
       <div style={{
-        width: "100%",
-        height: "180px",
+        width: vista === "lista" ? "180px" : "100%",
+        height: vista === "lista" ? "100%" : "180px",
+        minHeight: vista === "lista" ? "160px" : undefined,
         background: tieneImagen(reporte.foto) ? `url('${reporte.foto}')` : C.gray100,
         backgroundSize: "cover",
         backgroundPosition: "center",
         position: "relative",
-        borderBottom: `1px solid ${C.gray200}`,
+        borderBottom: vista === "tarjetas" ? `1px solid ${C.gray200}` : "none",
+        borderRight: vista === "lista" ? `1px solid ${C.gray200}` : "none",
       }}>
         {!tieneImagen(reporte.foto) && (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.gray400 }}>
