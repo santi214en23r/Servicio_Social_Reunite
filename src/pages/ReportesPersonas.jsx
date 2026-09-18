@@ -7,6 +7,7 @@ import { C, font, fontSans, fontMono } from "../shared/theme";
 import { GovBtn, SectionHeader, GovCard, Tag, InfoBox } from "../shared/components";
 import { supabase } from "../supabaseClient";
 import { Heart, MapPin, Users, Calendar, Search, Filter, ChevronRight, LayoutGrid, List } from "lucide-react";
+import "../styles/pages/ReportesPersonas.css";
 
 const ReportesPersonas = ({ setPage }) => {
   const [reportes, setReportes] = useState([]);
@@ -117,32 +118,32 @@ const ReportesPersonas = ({ setPage }) => {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: C.gray50, paddingBottom: "40px" }}>
+    <div className="reports-page">
       {/* Breadcrumb */}
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "16px 24px", display: "flex", gap: "6px", fontFamily: fontSans, fontSize: "12px", color: C.gray600 }}>
-        <button onClick={() => setPage("home")} style={{ background: "none", border: "none", color: C.teal, cursor: "pointer", fontFamily: fontSans, fontSize: "12px" }}>Inicio</button>
+      <div className="reports-breadcrumb">
+        <button onClick={() => setPage("home")} className="reports-breadcrumb-link">Inicio</button>
         <span>›</span>
         <span>Reportes de Personas Desaparecidas</span>
       </div>
 
       {/* Header */}
-      <div style={{ background: C.wine, padding: "28px 24px", marginBottom: "32px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gold, letterSpacing: ".1em", textTransform: "uppercase", marginBottom: "2px" }}>
+      <div className="reports-hero">
+        <div className="reports-container">
+          <div className="reports-eyebrow">
             BANCO NACIONAL DE DATOS
           </div>
-          <h1 style={{ fontFamily: font, fontSize: "32px", fontWeight: 700, color: C.white, marginBottom: "8px" }}>
+          <h1 className="reports-title">
             Reportes de Personas Desaparecidas
           </h1>
-          <p style={{ fontFamily: fontSans, fontSize: "14px", color: "rgba(255,255,255,.85)", maxWidth: "500px", lineHeight: 1.5 }}>
+          <p className="reports-intro">
             Base de datos nacional de personas desaparecidas. Utiliza las herramientas de búsqueda y filtrado para encontrar información.
           </p>
         </div>
       </div>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+      <div className="reports-container reports-content">
         {/* Pestañas de contenido */}
-        <div style={{ display: "flex", gap: "4px", borderBottom: `1px solid ${C.gray200}`, marginBottom: "24px" }}>
+        <div className="reports-tabs">
           {[
             { id: "reportes", label: "Listado de reportes" },
             { id: "estadisticas", label: "Estadísticas" },
@@ -150,19 +151,7 @@ const ReportesPersonas = ({ setPage }) => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              style={{
-                background: activeTab === tab.id ? C.white : "transparent",
-                color: activeTab === tab.id ? C.wine : C.gray600,
-                border: "none",
-                borderBottom: activeTab === tab.id ? `3px solid ${C.wine}` : "3px solid transparent",
-                padding: "12px 18px",
-                fontFamily: fontSans,
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: ".04em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-              }}
+              className={`reports-tab ${activeTab === tab.id ? "is-active" : ""}`}
             >
               {tab.label}
             </button>
@@ -174,18 +163,18 @@ const ReportesPersonas = ({ setPage }) => {
         ) : (
           <>
         {/* Estadísticas rápidas */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginBottom: "32px" }}>
+        <div className="reports-stats">
           {[
             { label: "Total de Reportes", valor: estadisticas.total, icon: Users, color: C.teal },
             { label: "Hombres", valor: estadisticas.hombres, icon: "♂", color: C.tealL },
             { label: "Mujeres", valor: estadisticas.mujeres, icon: "♀", color: C.wine },
             { label: "Edad Promedio", valor: `${estadisticas.promedio_edad} años`, icon: Calendar, color: C.gold },
           ].map((stat, i) => (
-            <div key={i} style={{ background: C.white, border: `1px solid ${C.gray200}`, borderTop: `3px solid ${stat.color}`, padding: "20px", borderRadius: "2px" }}>
-              <div style={{ fontSize: "13px", color: C.gray600, fontFamily: fontSans, fontWeight: 600, marginBottom: "8px", textTransform: "uppercase", letterSpacing: ".03em" }}>
+            <div key={i} className="reports-stat" style={{ "--stat-color": stat.color }}>
+              <div className="reports-stat-label">
                 {stat.label}
               </div>
-              <div style={{ fontSize: "28px", fontWeight: 700, color: stat.color, fontFamily: fontMono }}>
+              <div className="reports-stat-value">
                 {stat.valor}
               </div>
             </div>
@@ -193,7 +182,7 @@ const ReportesPersonas = ({ setPage }) => {
         </div>
 
         {/* Buscador y Filtros */}
-        <div role="group" aria-label="Cambiar vista" style={{ display: "flex", border: `1px solid ${C.gray200}`, background: C.white }}>
+        <div role="group" aria-label="Cambiar vista" className="reports-view-toggle">
               {[
                 { id: "tarjetas", label: "Vista de tarjetas", Icon: LayoutGrid },
                 { id: "lista", label: "Vista de listado", Icon: List },
@@ -204,68 +193,34 @@ const ReportesPersonas = ({ setPage }) => {
                   aria-label={label}
                   aria-pressed={vista === id}
                   onClick={() => setVista(id)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "8px 10px",
-                    border: "none",
-                    borderRight: id === "tarjetas" ? `1px solid ${C.gray200}` : "none",
-                    background: vista === id ? C.teal : C.white,
-                    color: vista === id ? C.white : C.gray600,
-                    cursor: "pointer",
-                  }}
+                  className={`reports-view-button ${vista === id ? "is-active" : ""}`}
                 >
                   <Icon size={16} />
                 </button>
               ))}
             </div>
-        <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "24px", marginBottom: "32px", borderRadius: "2px" }}>
-          <style>{`
-            @media (max-width: 900px) {
-              .reunite-reportes-filters {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-              }
-            }
-            @media (max-width: 520px) {
-              .reunite-reportes-filters {
-                grid-template-columns: 1fr !important;
-              }
-            }
-          `}</style>
-          <div className="reunite-reportes-filters" style={{ display: "grid", gridTemplateColumns: "2fr repeat(5, 1fr)", gap: "16px", alignItems: "flex-end" }}>
+        <div className="reports-filters">
+          <div className="reunite-reportes-filters">
             {/* Búsqueda */}
             <div>
-              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <label className="reports-filter-label">
                 Buscar por Nombre o Lugar
               </label>
-              <div style={{ position: "relative" }}>
-                <Search size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: C.gray400 }} />
+              <div className="reports-search-wrap">
+                <Search size={16} className="reports-search-icon" />
                 <input
                   type="text"
                   placeholder="Ingresa nombre, lugar..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "10px 12px 10px 36px",
-                    border: `1px solid ${C.gray200}`,
-                    borderRadius: "2px",
-                    fontFamily: fontSans,
-                    fontSize: "13px",
-                    outline: "none",
-                    background: C.white,
-                    color: C.gray800,
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = C.teal}
-                  onBlur={(e) => e.target.style.borderColor = C.gray200}
+                  className="reports-field reports-search-field"
                 />
               </div>
             </div>
 
             {/* Rango de fechas de registro */}
             <div>
-              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <label className="reports-filter-label">
                 Fecha desde
               </label>
               <input
@@ -275,22 +230,12 @@ const ReportesPersonas = ({ setPage }) => {
                 onChange={(e) => setFechaDesde(e.target.value)}
                 placeholder="dd/mm/aaaa"
                 maxLength={10}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: `1px solid ${C.gray200}`,
-                  borderRadius: "2px",
-                  fontFamily: fontSans,
-                  fontSize: "13px",
-                  outline: "none",
-                  background: C.white,
-                  color: C.gray800,
-                }}
+                className="reports-field"
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <label className="reports-filter-label">
                 Fecha hasta
               </label>
               <input
@@ -300,23 +245,13 @@ const ReportesPersonas = ({ setPage }) => {
                 onChange={(e) => setFechaHasta(e.target.value)}
                 placeholder="dd/mm/aaaa"
                 maxLength={10}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: `1px solid ${C.gray200}`,
-                  borderRadius: "2px",
-                  fontFamily: fontSans,
-                  fontSize: "13px",
-                  outline: "none",
-                  background: C.white,
-                  color: C.gray800,
-                }}
+                className="reports-field"
               />
             </div>
 
             {/* Filtro por edad al desaparecer */}
             <div>
-              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <label className="reports-filter-label">
                 Edad al desaparecer
               </label>
               <input
@@ -329,40 +264,19 @@ const ReportesPersonas = ({ setPage }) => {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") e.currentTarget.blur();
                 }}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: `1px solid ${C.gray200}`,
-                  borderRadius: "2px",
-                  fontFamily: fontSans,
-                  fontSize: "13px",
-                  outline: "none",
-                  background: C.white,
-                  color: C.gray800,
-                }}
+                className="reports-field"
               />
             </div>
 
             {/* Filtro por Sexo */}
             <div>
-              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <label className="reports-filter-label">
                 Sexo
               </label>
               <select
                 value={filtroSexo}
                 onChange={(e) => setFiltroSexo(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: `1px solid ${C.gray200}`,
-                  borderRadius: "2px",
-                  fontFamily: fontSans,
-                  fontSize: "13px",
-                  background: C.white,
-                  color: C.gray800,
-                  outline: "none",
-                  cursor: "pointer",
-                }}
+                className="reports-field"
               >
                 <option value="todos">Todos</option>
                 <option value="HOMBRE">Hombre</option>
@@ -373,24 +287,13 @@ const ReportesPersonas = ({ setPage }) => {
 
             {/* Ordenamiento */}
             <div>
-              <label style={{ display: "block", fontFamily: fontSans, fontSize: "12px", fontWeight: 700, marginBottom: "8px", color: C.gray700, textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <label className="reports-filter-label">
                 Ordenar por
               </label>
               <select
                 value={ordenamiento}
                 onChange={(e) => setOrdenamiento(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: `1px solid ${C.gray200}`,
-                  borderRadius: "2px",
-                  fontFamily: fontSans,
-                  fontSize: "13px",
-                  background: C.white,
-                  color: C.gray800,
-                  outline: "none",
-                  cursor: "pointer",
-                }}
+                className="reports-field"
               >
                 <option value="reciente">Más Reciente</option>
                 <option value="antiguo">Más Antiguo</option>
@@ -399,7 +302,7 @@ const ReportesPersonas = ({ setPage }) => {
             </div>
 
             {/* Botón Limpiar */}
-            <div style={{ textAlign: "left" }}>
+            <div className="reports-filter-action">
               <GovBtn
                 variant="secondary"
                 onClick={() => {
@@ -417,46 +320,31 @@ const ReportesPersonas = ({ setPage }) => {
           </div>
 
           {/* Resultados */}
-          <div style={{ marginTop: "16px", fontSize: "13px", color: C.gray600, fontFamily: fontSans }}>
+          <div className="reports-results">
             Se encontraron <strong>{reportesFiltrados.length}</strong> de <strong>{reportes.length}</strong> reportes
           </div>
         </div>
 
         {/* Listado de Reportes */}
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 20px" }}>
-            <div style={{ marginBottom: "16px" }}>
-              <div style={{ width: "40px", height: "40px", border: `3px solid ${C.gray200}`, borderTop: `3px solid ${C.teal}`, borderRadius: "50%", margin: "0 auto", animation: "spin 1s linear infinite" }} />
+          <div className="reports-status reports-loading">
+            <div className="reports-loading-wrap">
+              <div className="reports-spinner" />
             </div>
-            <p style={{ fontFamily: fontSans, color: C.gray600 }}>Cargando reportes...</p>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <p className="reports-status-text">Cargando reportes...</p>
           </div>
         ) : error ? (
           <InfoBox type="danger">{error}</InfoBox>
         ) : reportesFiltrados.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "60px 20px", background: C.white, border: `1px solid ${C.gray200}`, borderRadius: "2px" }}>
-            <Search size={48} style={{ margin: "0 auto 16px", color: C.gray300 }} />
-            <p style={{ fontFamily: fontSans, fontSize: "16px", color: C.gray600, marginBottom: "8px" }}>No se encontraron reportes</p>
-            <p style={{ fontFamily: fontSans, fontSize: "13px", color: C.gray500 }}>Intenta ajustar tus criterios de búsqueda o filtros</p>
+          <div className="reports-status reports-empty">
+            <Search size={48} className="reports-empty-icon" />
+            <p className="reports-empty-title">No se encontraron reportes</p>
+            <p className="reports-empty-text">Intenta ajustar tus criterios de búsqueda o filtros</p>
           </div>
         ) : (
           <>
-          <style>{`
-            @media (max-width: 600px) {
-              .reunite-reportes-lista .reunite-reporte-item-lista {
-                grid-template-columns: 1fr !important;
-              }
-              .reunite-reportes-lista .reunite-reporte-item-lista > div:first-child {
-                width: 100% !important;
-                height: 180px !important;
-                min-height: 0 !important;
-                border-right: none !important;
-                border-bottom: 1px solid ${C.gray200} !important;
-              }
-            }
-          `}</style>
-          <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: "12px" }}> </div>
-          <div className={vista === "lista" ? "reunite-reportes-lista" : undefined} style={{ display: "grid", gridTemplateColumns: vista === "tarjetas" ? "repeat(auto-fill, minmax(320px, 1fr))" : "1fr", gap: "20px" }}>
+          <div className="reports-list-spacer"> </div>
+          <div className={`reports-grid ${vista === "lista" ? "reunite-reportes-lista" : ""}`}>
             {reportesFiltrados.map((reporte) => (
               <ReporteCard
                 key={reporte.id}
@@ -521,12 +409,12 @@ const ReportesStatistics = ({ reportes, loading }) => {
   const axisStyle = { fontFamily: fontSans, fontSize: 11, fill: C.gray600 };
 
   if (loading) {
-    return <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "60px 20px", textAlign: "center", color: C.gray600, fontFamily: fontSans }}>Cargando estadísticas...</div>;
+    return <div className="reports-statistics-loading">Cargando estadísticas...</div>;
   }
 
   return (
     <div>
-      <div style={{ marginBottom: "24px" }}>
+      <div className="reports-statistics-heading">
         <SectionHeader
           label="Análisis de reportes"
           title="Distribución de personas reportadas"
@@ -534,10 +422,10 @@ const ReportesStatistics = ({ reportes, loading }) => {
         />
       </div>
 
-      <div className="reunite-page-grid" style={{ display: "grid", gridTemplateColumns: "1.35fr .85fr", gap: "16px", marginBottom: "16px" }}>
-        <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "20px" }}>
-          <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gray600, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "4px" }}>DISTRIBUCIÓN POR EDAD</div>
-          <div style={{ fontFamily: font, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "16px" }}>Reportes por grupo de edad</div>
+      <div className="reunite-page-grid reports-chart-grid">
+        <div className="reports-chart-panel">
+          <div className="reports-chart-eyebrow">DISTRIBUCIÓN POR EDAD</div>
+          <div className="reports-chart-title">Reportes por grupo de edad</div>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={ageData}>
               <CartesianGrid strokeDasharray="3 3" stroke={C.gray100} vertical={false} />
@@ -549,9 +437,9 @@ const ReportesStatistics = ({ reportes, loading }) => {
           </ResponsiveContainer>
         </div>
 
-        <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "20px" }}>
-          <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gray600, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "4px" }}>DISTRIBUCIÓN POR SEXO</div>
-          <div style={{ fontFamily: font, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "4px" }}>Personas reportadas</div>
+        <div className="reports-chart-panel">
+          <div className="reports-chart-eyebrow">DISTRIBUCIÓN POR SEXO</div>
+          <div className="reports-chart-title reports-chart-title-tight">Personas reportadas</div>
           {sexData.length > 0 ? (
             <>
               <ResponsiveContainer width="100%" height={210}>
@@ -562,22 +450,22 @@ const ReportesStatistics = ({ reportes, loading }) => {
                   <Tooltip contentStyle={tooltipStyle} />
                 </PieChart>
               </ResponsiveContainer>
-              <div style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}>
+              <div className="reports-legend">
                 {sexData.map((item, index) => (
-                  <div key={item.name} style={{ display: "flex", alignItems: "center", gap: "5px", fontFamily: fontSans, fontSize: "11px", color: C.gray700 }}>
-                    <span style={{ width: "9px", height: "9px", background: chartColors[index % chartColors.length] }} />
+                  <div key={item.name} className="reports-legend-item">
+                    <span className="reports-legend-swatch" style={{ "--legend-color": chartColors[index % chartColors.length] }} />
                     {item.name}: <strong>{item.value}</strong>
                   </div>
                 ))}
               </div>
             </>
-          ) : <div style={{ padding: "70px 10px", textAlign: "center", color: C.gray600, fontFamily: fontSans, fontSize: "13px" }}>Sin datos de sexo disponibles.</div>}
+          ) : <div className="reports-chart-empty reports-chart-empty-tall">Sin datos de sexo disponibles.</div>}
         </div>
       </div>
 
-      <div style={{ background: C.white, border: `1px solid ${C.gray200}`, padding: "20px", marginBottom: "24px" }}>
-        <div style={{ fontFamily: fontSans, fontSize: "11px", fontWeight: 700, color: C.gray600, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "4px" }}>LUGARES CON MÁS REPORTES</div>
-        <div style={{ fontFamily: font, fontSize: "18px", fontWeight: 700, color: C.gray900, marginBottom: "16px" }}>Distribución por lugar de los hechos</div>
+      <div className="reports-chart-panel reports-places-panel">
+        <div className="reports-chart-eyebrow">LUGARES CON MÁS REPORTES</div>
+        <div className="reports-chart-title">Distribución por lugar de los hechos</div>
         {places.length > 0 ? (
           <ResponsiveContainer width="100%" height={Math.max(220, places.length * 42)}>
             <BarChart data={places} layout="vertical" margin={{ left: 12, right: 12 }}>
@@ -588,7 +476,7 @@ const ReportesStatistics = ({ reportes, loading }) => {
               <Bar dataKey="reportes" name="Reportes" fill={C.wine} />
             </BarChart>
           </ResponsiveContainer>
-        ) : <div style={{ padding: "40px 10px", textAlign: "center", color: C.gray600, fontFamily: fontSans, fontSize: "13px" }}>Sin datos de ubicación disponibles.</div>}
+        ) : <div className="reports-chart-empty">Sin datos de ubicación disponibles.</div>}
       </div>
     </div>
   );
@@ -603,80 +491,47 @@ const ReporteCard = ({ reporte, vista, onSelect, calcularDiasDesaparecido, tiene
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onSelect}
-      className={vista === "lista" ? "reunite-reporte-item-lista" : undefined}
-      style={{
-        background: C.white,
-        border: `1px solid ${hover ? C.teal + "55" : C.gray200}`,
-        borderTop: `3px solid ${hover ? C.teal : C.gray200}`,
-        boxShadow: hover ? "0 4px 20px rgba(0,132,127,.1)" : "0 1px 4px rgba(0,0,0,.06)",
-        transition: "all .25s",
-        cursor: "pointer",
-        borderRadius: "2px",
-        overflow: "hidden",
-        display: vista === "lista" ? "grid" : "flex",
-        gridTemplateColumns: vista === "lista" ? "180px 1fr" : undefined,
-        flexDirection: vista === "tarjetas" ? "column" : undefined,
-      }}
+      className={`${vista === "lista" ? "reunite-reporte-item-lista" : "reports-card"} ${hover ? "is-hovered" : ""}`}
     >
       {/* Imagen */}
-      <div style={{
-        width: vista === "lista" ? "180px" : "100%",
-        height: vista === "lista" ? "100%" : "180px",
-        minHeight: vista === "lista" ? "160px" : undefined,
-        background: tieneImagen(reporte.foto) ? `url('${reporte.foto}')` : C.gray100,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        position: "relative",
-        borderBottom: vista === "tarjetas" ? `1px solid ${C.gray200}` : "none",
-        borderRight: vista === "lista" ? `1px solid ${C.gray200}` : "none",
-      }}>
-        {!tieneImagen(reporte.foto) && (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.gray400 }}>
+      <div className={`reports-card-image ${vista === "lista" ? "is-list" : "is-card"}`}>
+        {tieneImagen(reporte.foto) ? (
+          <img src={reporte.foto} className="reports-card-image-element" alt="" />
+        ) : (
+          <div className="reports-card-placeholder">
             <Heart size={40} />
           </div>
         )}
-        <div style={{
-          position: "absolute",
-          top: "8px",
-          right: "8px",
-          background: reporte.sexo === "MUJER" ? C.wine : C.teal,
-          color: C.white,
-          padding: "4px 8px",
-          fontSize: "10px",
-          fontFamily: fontSans,
-          fontWeight: 700,
-          borderRadius: "2px",
-          textTransform: "uppercase",
-        }}>
+        <div className={`reports-sex-badge ${reporte.sexo === "MUJER" ? "is-woman" : "is-man"}`}>
           {reporte.sexo === "MUJER" ? "👩 Mujer" : "👨 Hombre"}
         </div>
       </div>
 
       {/* Contenido */}
-      <div style={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column" }}>
+      <div className="reports-card-content">
         {/* Nombre */}
-        <h3 style={{ fontFamily: font, fontSize: "15px", fontWeight: 700, color: C.gray900, marginBottom: "8px", lineHeight: 1.3 }}>
+        <h3 className="reports-card-title">
           {reporte.nombre_completo}
         </h3>
 
         {/* Información de edad */}
-        <div style={{ display: "flex", gap: "8px", marginBottom: "12px", fontSize: "12px" }}>
-          <div style={{ background: C.tealBg, color: C.teal, padding: "3px 8px", borderRadius: "2px", fontFamily: fontMono, fontWeight: 600 }}>
+        <div className="reports-card-tags">
+          <div className="reports-age-tag">
             {reporte.edad_actual} años
           </div>
-          <div style={{ background: "rgba(237,100,166,.1)", color: "#d42f62", padding: "3px 8px", borderRadius: "2px", fontFamily: fontSans, fontWeight: 600, fontSize: "11px" }}>
+          <div className="reports-time-tag">
             {calcularDiasDesaparecido(reporte.fecha_hechos)}
           </div>
         </div>
 
         {/* Lugar */}
-        <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", marginBottom: "12px", fontSize: "12px", color: C.gray600, fontFamily: fontSans }}>
-          <MapPin size={14} style={{ marginTop: "2px", flexShrink: 0, color: C.wine }} />
+        <div className="reports-card-location">
+          <MapPin size={14} className="reports-card-location-icon" />
           <span>{reporte.lugar_hechos}</span>
         </div>
 
         {/* Fecha */}
-        <div style={{ fontSize: "11px", color: C.gray500, fontFamily: fontMono, marginBottom: "12px", borderTop: `1px solid ${C.gray200}`, paddingTop: "8px" }}>
+        <div className="reports-card-date">
           Reportado: {new Date(reporte.fecha_registro).toLocaleDateString("es-MX")}
         </div>
 
@@ -685,24 +540,7 @@ const ReporteCard = ({ reporte, vista, onSelect, calcularDiasDesaparecido, tiene
           onClick={(e) => {
             e.stopPropagation();
           }}
-          style={{
-            width: "100%",
-            background: hover ? C.teal : C.gray100,
-            color: hover ? C.white : C.teal,
-            border: `1px solid ${C.teal}`,
-            padding: "8px",
-            fontSize: "11px",
-            fontFamily: fontSans,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            cursor: "pointer",
-            transition: "all .2s",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "6px",
-            letterSpacing: ".03em",
-          }}
+          className="reports-card-button"
         >
           Ver Detalles
           <ChevronRight size={14} />
@@ -719,125 +557,73 @@ const DetalleReporteModal = ({ reporte, onClose, formatearFecha, calcularDiasDes
       {/* Overlay */}
       <div
         onClick={onClose}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,.5)",
-          zIndex: 1000,
-          animation: "fadeIn .2s ease",
-        }}
+        className="reports-modal-overlay"
       />
 
       {/* Modal */}
       <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: C.white,
-          maxWidth: "700px",
-          maxHeight: "90vh",
-          overflowY: "auto",
-          zIndex: 1001,
-          borderRadius: "2px",
-          boxShadow: "0 25px 50px rgba(0,0,0,.2)",
-          animation: "slideUp .3s ease",
-        }}
+        className="reports-modal"
       >
-        <style>{`
-          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-          @keyframes slideUp { from { opacity: 0; transform: translate(-50%, calc(-50% + 20px)); } to { opacity: 1; transform: translate(-50%, -50%); } }
-        `}</style>
-
         {/* Header */}
-        <div style={{ background: C.wine, color: C.white, padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 style={{ fontFamily: font, fontSize: "20px", fontWeight: 700 }}>
+        <div className="reports-modal-header">
+          <h2 className="reports-modal-title">
             Detalles del Reporte
           </h2>
           <button
             onClick={onClose}
-            style={{
-              background: "rgba(255,255,255,.2)",
-              border: "none",
-              color: C.white,
-              fontSize: "24px",
-              cursor: "pointer",
-              width: "32px",
-              height: "32px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className="reports-modal-close"
           >
             ×
           </button>
         </div>
 
         {/* Contenido */}
-        <div style={{ padding: "24px" }}>
+        <div className="reports-modal-content">
           {/* Foto + Info Principal */}
-          <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: "24px", marginBottom: "24px" }}>
+          <div className="reports-modal-summary">
             {/* Foto */}
-            <div style={{
-              width: "200px",
-              height: "240px",
-              background: tieneImagen(reporte.foto) ? `url('${reporte.foto}')` : C.gray100,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              border: `1px solid ${C.gray200}`,
-              borderRadius: "2px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: C.gray400,
-            }}>
-              {!tieneImagen(reporte.foto) && <Heart size={48} />}
+            <div className="reports-modal-photo">
+              {tieneImagen(reporte.foto) ? <img src={reporte.foto} className="reports-modal-photo-element" alt="" /> : <Heart size={48} />}
             </div>
 
             {/* Info Principal */}
             <div>
-              <h3 style={{ fontFamily: font, fontSize: "22px", fontWeight: 700, color: C.gray900, marginBottom: "12px" }}>
+              <h3 className="reports-modal-name">
                 {reporte.nombre_completo}
               </h3>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "20px" }}>
+              <div className="reports-modal-metrics">
                 <div>
-                  <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Edad Actual</div>
-                  <div style={{ fontSize: "18px", fontWeight: 700, color: C.teal, fontFamily: fontMono }}>{reporte.edad_actual} años</div>
+                  <div className="reports-detail-label">Edad Actual</div><div className="reports-metric-teal">{reporte.edad_actual} años</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Edad al Desaparecer</div>
-                  <div style={{ fontSize: "18px", fontWeight: 700, color: C.wine, fontFamily: fontMono }}>{reporte.edad_desaparicion} años</div>
+                  <div className="reports-detail-label">Edad al Desaparecer</div><div className="reports-metric-wine">{reporte.edad_desaparicion} años</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Sexo</div>
+                  <div className="reports-detail-label">Sexo</div>
                   <Tag color={reporte.sexo === "MUJER" ? C.wine : C.teal}>{reporte.sexo}</Tag>
                 </div>
                 <div>
-                  <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Tiempo Desaparecido</div>
+                  <div className="reports-detail-label">Tiempo Desaparecido</div>
                   <Tag color={C.wine}>{calcularDiasDesaparecido(reporte.fecha_hechos)}</Tag>
                 </div>
               </div>
 
               {/* Lugar de Hechos */}
-              <div style={{ background: C.gray50, padding: "12px", borderRadius: "2px", borderLeft: `3px solid ${C.wine}` }}>
-                <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px" }}>Lugar de Hechos</div>
-                <div style={{ fontSize: "14px", fontFamily: fontSans, color: C.gray900, fontWeight: 500 }}>{reporte.lugar_hechos}</div>
+              <div className="reports-place-highlight">
+                <div className="reports-detail-label">Lugar de Hechos</div>
+                <div className="reports-place-value">{reporte.lugar_hechos}</div>
               </div>
             </div>
           </div>
 
           {/* Información Detallada */}
-          <div style={{ borderTop: `1px solid ${C.gray200}`, paddingTop: "20px" }}>
-            <h4 style={{ fontFamily: fontSans, fontSize: "13px", fontWeight: 700, color: C.gray700, textTransform: "uppercase", marginBottom: "16px", letterSpacing: ".03em" }}>
+          <div className="reports-modal-details">
+            <h4 className="reports-section-title">
               Información Detallada
             </h4>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "20px" }}>
+            <div className="reports-details-grid">
               <InfoItem label="Lugar de Nacimiento" valor={reporte.lugar_nacimiento} />
               <InfoItem label="Nacionalidad" valor={reporte.nacionalidad} />
               <InfoItem label="Fecha de Desaparición" valor={formatearFecha(reporte.fecha_hechos)} />
@@ -869,11 +655,11 @@ const DetalleReporteModal = ({ reporte, onClose, formatearFecha, calcularDiasDes
             )}
 
             {/* Información de Registro */}
-            <div style={{ background: C.gray50, padding: "12px", borderRadius: "2px", marginTop: "16px" }}>
-              <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontMono }}>
+            <div className="reports-record-meta">
+              <div className="reports-record-line">
                 ID de Reporte: <strong>{reporte.id}</strong>
               </div>
-              <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontMono }}>
+              <div className="reports-record-line">
                 Registrado: {formatearFecha(reporte.fecha_registro)}
               </div>
             </div>
@@ -887,31 +673,21 @@ const DetalleReporteModal = ({ reporte, onClose, formatearFecha, calcularDiasDes
 // Componentes auxiliares
 const InfoItem = ({ label, valor }) => (
   <div>
-    <div style={{ fontSize: "11px", color: C.gray600, fontFamily: fontSans, fontWeight: 700, textTransform: "uppercase", marginBottom: "4px", letterSpacing: ".03em" }}>
+    <div className="reports-detail-label">
       {label}
     </div>
-    <div style={{ fontSize: "13px", color: C.gray800, fontFamily: fontSans }}>
+    <div className="reports-detail-value">
       {valor || "Sin información"}
     </div>
   </div>
 );
 
 const DetailSection = ({ title, children }) => (
-  <div style={{ marginBottom: "16px" }}>
-    <h5 style={{ fontFamily: fontSans, fontSize: "12px", fontWeight: 700, color: C.teal, textTransform: "uppercase", marginBottom: "8px", letterSpacing: ".03em" }}>
+  <div className="reports-detail-section">
+    <h5 className="reports-detail-section-title">
       {title}
     </h5>
-    <div style={{
-      background: C.gray50,
-      padding: "12px",
-      borderRadius: "2px",
-      fontSize: "13px",
-      color: C.gray800,
-      fontFamily: fontSans,
-      whiteSpace: "pre-wrap",
-      lineHeight: 1.6,
-      borderLeft: `3px solid ${C.teal}`,
-    }}>
+    <div className="reports-detail-section-content">
       {children}
     </div>
   </div>

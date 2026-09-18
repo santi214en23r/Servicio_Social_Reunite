@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import { C, font, fontSans } from "../shared/theme";
 import { GovBtn, Tag } from "../shared/components";
+import "../styles/pages/Statistics.css";
 
 const Statistics = ({ setPage }) => {
   const [loading, setLoading] = useState(false);
@@ -28,8 +29,8 @@ const Statistics = ({ setPage }) => {
   const metricCards = [
     { n:"112,345", label:"Personas Desaparecidas\nRegistradas", icon:"", trend:"+2.3%", up:true,  color:C.wine },
     { n:"54,321",  label:"Personas Localizadas",                icon:"", trend:"-0.5%", up:false, color:C.teal },
-    { n:"234",     label:"Búsquedas Activas\nEn Proceso",       icon:"", trend:"±0%",  up:null,  color:"#2563EB" },
-    { n:"7",       label:"Estados con Mayor\nIncidencia",        icon:"", trend:"+1",   up:true,  color:"#7C3AED" },
+    { n:"234",     label:"Búsquedas Activas\nEn Proceso",       icon:"", trend:"±0%",  up:null,  color:C.tealL },
+    { n:"7",       label:"Estados con Mayor\nIncidencia",        icon:"", trend:"+1",   up:true,  color:C.gold },
   ];
   const trends = ["baja","alta","alta","baja","alta","baja","estable"];
 
@@ -37,43 +38,43 @@ const Statistics = ({ setPage }) => {
   const axisTickStyle = { fontFamily:fontSans, fontSize:11, fill:C.gray600 };
 
   return (
-    <div style={{ minHeight:"80vh", background:C.gray50, padding:"32px 24px" }}>
-      <div style={{ maxWidth:"1200px", margin:"0 auto" }}>
+    <div className="statistics-page">
+      <div className="statistics-container">
 
         {/* Page header */}
-        <div style={{ background:C.wine, padding:"20px 24px", marginBottom:"20px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div className="statistics-header">
           <div>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gold, letterSpacing:".1em", textTransform:"uppercase", marginBottom:"2px" }}>ESTADÍSTICAS NACIONALES</div>
-            <h1 style={{ fontFamily:font, fontSize:"20px", fontWeight:700, color:C.white }}>Sistema de Monitoreo — Personas Desaparecidas en México</h1>
+            <div className="statistics-eyebrow">ESTADÍSTICAS NACIONALES</div>
+            <h1 className="statistics-title">Sistema de Monitoreo — Personas Desaparecidas en México</h1>
           </div>
-          <div style={{ display:"flex", gap:"8px", alignItems:"center" }}>
-            <span style={{ fontFamily:fontSans, fontSize:"11px", color:"rgba(255,255,255,.6)" }}>Última actualización: 03/11/2025</span>
+          <div className="statistics-header-actions">
+            <span className="statistics-updated">Última actualización: 03/11/2025</span>
             <button onClick={()=>{setLoading(true);setTimeout(()=>setLoading(false),1200);}}
-              style={{ background:"transparent", border:"1px solid rgba(255,255,255,.4)", color:C.white, padding:"7px 14px", borderRadius:"3px", fontFamily:fontSans, fontSize:"12px", fontWeight:700, cursor:"pointer" }}>
+              className="statistics-refresh-button">
               {loading?"Actualizando…":"↻ Actualizar"}
             </button>
           </div>
         </div>
 
         {/* ── Metric cards ── */}
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"14px", marginBottom:"20px" }}>
+        <div className="statistics-metric-grid">
           {metricCards.map((m,i) => (
-            <div key={i} style={{ background:C.white, border:`1px solid ${C.gray200}`, borderTop:`4px solid ${m.color}`, padding:"16px" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"10px" }}>
-                <span style={{ fontSize:"20px" }}>{m.icon}</span>
-                <span style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:m.up===true?"#CC0000":m.up===false?C.teal:"#2563EB" }}>{m.trend}</span>
+            <div key={i} className="statistics-metric-card" style={{ "--metric-color": m.color }}>
+              <div className="statistics-metric-top">
+                <span className="statistics-metric-icon">{m.icon}</span>
+                <span className={`statistics-metric-trend ${m.up===true ? "is-up" : m.up===false ? "is-down" : "is-stable"}`}>{m.trend}</span>
               </div>
-              <div style={{ fontFamily:font, fontSize:"26px", fontWeight:900, color:m.color, lineHeight:1 }}>{m.n}</div>
-              <div style={{ fontFamily:fontSans, fontSize:"11px", color:C.gray600, marginTop:"4px", lineHeight:1.4, whiteSpace:"pre-line" }}>{m.label}</div>
+              <div className="statistics-metric-value">{m.n}</div>
+              <div className="statistics-metric-label">{m.label}</div>
             </div>
           ))}
         </div>
 
         {/* ── Row 1: Trend + Pie ── */}
-        <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr", gap:"16px", marginBottom:"16px" }}>
-          <div style={{ background:C.white, border:`1px solid ${C.gray200}`, padding:"20px" }}>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray600, letterSpacing:".06em", textTransform:"uppercase", marginBottom:"4px" }}>TENDENCIA MENSUAL</div>
-            <div style={{ fontFamily:font, fontSize:"17px", fontWeight:700, color:C.gray900, marginBottom:"16px" }}>Casos registrados — 2025</div>
+        <div className="statistics-chart-grid statistics-chart-grid-primary">
+          <div className="statistics-chart-panel">
+            <div className="statistics-chart-eyebrow">TENDENCIA MENSUAL</div>
+            <div className="statistics-chart-title">Casos registrados — 2025</div>
             <ResponsiveContainer width="100%" height={220}>
               <AreaChart data={monthly}>
                 <defs>
@@ -91,9 +92,9 @@ const Statistics = ({ setPage }) => {
             </ResponsiveContainer>
           </div>
 
-          <div style={{ background:C.white, border:`1px solid ${C.gray200}`, padding:"20px" }}>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray600, letterSpacing:".06em", textTransform:"uppercase", marginBottom:"4px" }}>DISTRIBUCIÓN</div>
-            <div style={{ fontFamily:font, fontSize:"17px", fontWeight:700, color:C.gray900, marginBottom:"16px" }}>Por sexo</div>
+          <div className="statistics-chart-panel">
+            <div className="statistics-chart-eyebrow">DISTRIBUCIÓN</div>
+            <div className="statistics-chart-title">Por sexo</div>
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie data={sexo} dataKey="value" cx="50%" cy="50%" innerRadius={48} outerRadius={70}>
@@ -102,12 +103,12 @@ const Statistics = ({ setPage }) => {
                 <Tooltip contentStyle={tooltipStyle}/>
               </PieChart>
             </ResponsiveContainer>
-            <div style={{ display:"flex", gap:"12px", justifyContent:"center" }}>
+            <div className="statistics-legend">
               {sexo.map((s,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:"6px" }}>
-                  <div style={{ width:"10px", height:"10px", background:COLORS[i] }}/>
-                  <span style={{ fontFamily:fontSans, fontSize:"11px", color:C.gray700 }}>{s.name}</span>
-                  <span style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:COLORS[i] }}>{((s.value/112345)*100).toFixed(0)}%</span>
+                <div key={i} className="statistics-legend-item" style={{ "--legend-color": COLORS[i] }}>
+                  <div className="statistics-legend-swatch"/>
+                  <span>{s.name}</span>
+                  <span className="statistics-legend-value">{((s.value/112345)*100).toFixed(0)}%</span>
                 </div>
               ))}
             </div>
@@ -115,10 +116,10 @@ const Statistics = ({ setPage }) => {
         </div>
 
         {/* ── Row 2: Age + State bars ── */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"20px" }}>
-          <div style={{ background:C.white, border:`1px solid ${C.gray200}`, padding:"20px" }}>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray600, letterSpacing:".06em", textTransform:"uppercase", marginBottom:"4px" }}>DISTRIBUCIÓN</div>
-            <div style={{ fontFamily:font, fontSize:"17px", fontWeight:700, color:C.gray900, marginBottom:"16px" }}>Por grupo de edad</div>
+        <div className="statistics-chart-grid statistics-chart-grid-secondary">
+          <div className="statistics-chart-panel">
+            <div className="statistics-chart-eyebrow">DISTRIBUCIÓN</div>
+            <div className="statistics-chart-title">Por grupo de edad</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={edad}>
                 <CartesianGrid strokeDasharray="3 3" stroke={C.gray100} vertical={false}/>
@@ -130,9 +131,9 @@ const Statistics = ({ setPage }) => {
             </ResponsiveContainer>
           </div>
 
-          <div style={{ background:C.white, border:`1px solid ${C.gray200}`, padding:"20px" }}>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray600, letterSpacing:".06em", textTransform:"uppercase", marginBottom:"4px" }}>COMPARATIVO</div>
-            <div style={{ fontFamily:font, fontSize:"17px", fontWeight:700, color:C.gray900, marginBottom:"16px" }}>Por estado</div>
+          <div className="statistics-chart-panel">
+            <div className="statistics-chart-eyebrow">COMPARATIVO</div>
+            <div className="statistics-chart-title">Por estado</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={byState} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" stroke={C.gray100} horizontal={false}/>
@@ -147,16 +148,16 @@ const Statistics = ({ setPage }) => {
         </div>
 
         {/* ── State table ── */}
-        <div style={{ background:C.white, border:`1px solid ${C.gray200}`, marginBottom:"20px" }}>
-          <div style={{ background:C.gray50, padding:"12px 16px", borderBottom:`1px solid ${C.gray200}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray700, letterSpacing:".06em", textTransform:"uppercase" }}>DESGLOSE POR ESTADO</div>
+        <div className="statistics-table-panel">
+          <div className="statistics-table-header">
+            <div className="statistics-chart-eyebrow statistics-table-heading">DESGLOSE POR ESTADO</div>
             <GovBtn variant="ghost">⬇ Exportar</GovBtn>
           </div>
-          <table style={{ width:"100%", borderCollapse:"collapse" }}>
+          <table className="statistics-table">
             <thead>
-              <tr style={{ background:C.gray50, borderBottom:`2px solid ${C.gray200}` }}>
+              <tr className="statistics-table-heading-row">
                 {["Estado","Desaparecidas","Localizadas","Efectividad (%)","Tendencia"].map(h => (
-                  <th key={h} style={{ padding:"10px 16px", fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray600, letterSpacing:".06em", textTransform:"uppercase", textAlign:"left" }}>{h}</th>
+                  <th key={h}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -165,20 +166,18 @@ const Statistics = ({ setPage }) => {
                 const pct = ((r.l/r.d)*100).toFixed(1);
                 const t   = trends[i];
                 return (
-                  <tr key={i} style={{ borderBottom:`1px solid ${C.gray100}`, background:i%2===0?C.white:C.gray50 }}>
-                    <td style={{ padding:"10px 16px", fontFamily:fontSans, fontSize:"13px", fontWeight:700, color:C.gray900 }}>{r.estado}</td>
-                    <td style={{ padding:"10px 16px", fontFamily:fontSans, fontSize:"13px", fontWeight:600, color:C.wine  }}>{r.d.toLocaleString()}</td>
-                    <td style={{ padding:"10px 16px", fontFamily:fontSans, fontSize:"13px", fontWeight:600, color:C.teal  }}>{r.l.toLocaleString()}</td>
-                    <td style={{ padding:"10px 16px" }}>
-                      <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-                        <div style={{ width:"60px", height:"5px", background:C.gray200 }}>
-                          <div style={{ width:`${pct}%`, height:"100%", background:C.teal }}/>
-                        </div>
-                        <span style={{ fontFamily:fontSans, fontSize:"12px", fontWeight:700, color:C.teal }}>{pct}%</span>
+                  <tr key={i} className={`statistics-table-row ${i%2===0 ? "is-even" : ""}`}>
+                    <td className="statistics-state-name">{r.estado}</td>
+                    <td className="statistics-state-disappeared">{r.d.toLocaleString()}</td>
+                    <td className="statistics-state-located">{r.l.toLocaleString()}</td>
+                    <td>
+                      <div className="statistics-effectiveness">
+                        <div className="statistics-effectiveness-bar" style={{ "--effectiveness-width": `${pct}%` }}><div /></div>
+                        <span className="statistics-effectiveness-value">{pct}%</span>
                       </div>
                     </td>
-                    <td style={{ padding:"10px 16px" }}>
-                      <span style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, padding:"2px 8px", display:"inline-block", background:t==="alta"?"#FEF2F2":t==="baja"?C.tealBg:"#EFF6FF", color:t==="alta"?"#CC0000":t==="baja"?C.teal:"#2563EB", letterSpacing:".04em", textTransform:"uppercase" }}>
+                    <td>
+                      <span className={`statistics-trend ${t}`}>
                         {t==="alta"?"↑":t==="baja"?"↓":"→"} {t}
                       </span>
                     </td>

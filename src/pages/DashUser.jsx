@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { C, font, fontSans } from "../shared/theme";
 import { SectionHeader, GovCard, Tag, GovBtn, Divider } from "../shared/components";
+import "../styles/pages/DashUser.css";
 
 const PageWrap = ({ children }) => (
-  <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"32px 24px" }}>{children}</div>
+  <div className="dash-user-page-wrap">{children}</div>
 );
 
 const DashUser = ({ setPage }) => {
@@ -35,46 +36,42 @@ const DashUser = ({ setPage }) => {
   ];
 
   return (
-    <div>
+    <div className="dash-user-page">
       {/* ── Hero ── */}
-      <div style={{
-        background:`linear-gradient(105deg, ${C.wineD} 0%, ${C.wine} 40%, ${C.teal} 100%)`,
-        position:"relative", overflow:"hidden", minHeight:"400px", display:"flex", alignItems:"center",
-        backgroundImage:`repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.018) 10px,rgba(255,255,255,.018) 11px), linear-gradient(105deg,${C.wineD} 0%,${C.wine} 40%,${C.teal} 100%)`
-      }}>
-        <div style={{ position:"absolute", right:0, top:0, width:"45%", height:"100%", background:`linear-gradient(135deg,transparent 0%,${C.teal}22 100%)`, borderLeft:`2px solid ${C.teal}44` }}/>
-        <div style={{ position:"absolute", right:"5%", top:"10%", width:"300px", height:"300px", borderRadius:"50%", border:`1px solid ${C.teal}22` }}/>
+      <div className="dash-user-hero">
+        <div className="dash-user-hero-panel"/>
+        <div className="dash-user-hero-ring"/>
 
-        <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"60px 24px", width:"100%", position:"relative", zIndex:2 }}>
-          <div style={{ maxWidth:"580px" }}>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", background:"rgba(255,255,255,.08)", border:`1px solid ${s.accent}66`, padding:"5px 14px", borderRadius:"2px", marginBottom:"20px" }}>
-              <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:s.accent, animation:"pulseDot 1.8s infinite" }}/>
-              <span style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:s.accent, letterSpacing:".1em", textTransform:"uppercase" }}>{s.label}</span>
+        <div className="dash-user-hero-inner">
+          <div className="dash-user-hero-copy">
+            <div className="dash-user-hero-label" style={{ "--slide-accent": s.accent }}>
+              <div className="dash-user-hero-dot"/>
+              <span>{s.label}</span>
             </div>
-            <h1 style={{ fontFamily:font, fontSize:"clamp(28px,4vw,48px)", fontWeight:900, color:C.white, lineHeight:1.1, marginBottom:"16px" }}>{s.title}</h1>
-            <p style={{ fontFamily:fontSans, fontSize:"15px", color:"rgba(255,255,255,.75)", lineHeight:1.7, marginBottom:"28px", maxWidth:"480px" }}>{s.sub}</p>
-            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
+            <h1 className="dash-user-hero-title">{s.title}</h1>
+            <p className="dash-user-hero-subtitle">{s.sub}</p>
+            <div className="dash-user-hero-actions">
               <GovBtn onClick={()=>setPage(s.ctaPage)}>{s.cta}</GovBtn>
-              <button onClick={()=>setPage(s.cta2Page)} style={{ background:"transparent", border:"1px solid rgba(255,255,255,.4)", color:C.white, padding:"9px 20px", borderRadius:"3px", fontFamily:fontSans, fontSize:"12px", fontWeight:700, letterSpacing:".06em", textTransform:"uppercase", cursor:"pointer" }}>{s.cta2}</button>
+              <button onClick={()=>setPage(s.cta2Page)} className="dash-user-outline-button">{s.cta2}</button>
             </div>
           </div>
         </div>
 
         {/* Slide dots */}
-        <div style={{ position:"absolute", bottom:"20px", left:"50%", transform:"translateX(-50%)", display:"flex", gap:"6px" }}>
+        <div className="dash-user-slide-dots">
           {slides.map((_,i) => (
-            <button key={i} onClick={()=>setSlide(i)} style={{ width:i===slide?"28px":"8px", height:"4px", borderRadius:"2px", background:i===slide?C.white:"rgba(255,255,255,.3)", border:"none", cursor:"pointer", transition:"all .3s" }}/>
+            <button key={i} onClick={()=>setSlide(i)} className={`dash-user-slide-dot ${i===slide ? "is-active" : ""}`}/>
           ))}
         </div>
       </div>
 
       {/* ── Impact stats bar ── */}
-      <div style={{ background:C.teal }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"grid", gridTemplateColumns:"repeat(4,1fr)" }}>
+      <div className="dash-user-impact">
+        <div className="dash-user-impact-grid">
           {impactStats.map((s,i) => (
-            <div key={i} style={{ padding:"18px 20px", textAlign:"center", borderRight:i<3?`1px solid rgba(255,255,255,.15)`:"none" }}>
-              <div style={{ fontFamily:font, fontSize:"26px", fontWeight:900, color:C.white }}>{s.n}</div>
-              <div style={{ fontFamily:fontSans, fontSize:"11px", color:"rgba(255,255,255,.8)", textTransform:"uppercase", letterSpacing:".04em", marginTop:"2px" }}>{s.label}</div>
+            <div key={i} className={`dash-user-impact-stat ${i<3 ? "has-divider" : ""}`}>
+              <div className="dash-user-impact-value">{s.n}</div>
+              <div className="dash-user-impact-label">{s.label}</div>
             </div>
           ))}
         </div>
@@ -82,17 +79,17 @@ const DashUser = ({ setPage }) => {
 
       {/* ── Action cards ── */}
       <PageWrap>
-        <div style={{ marginTop:"8px" }}>
+        <div className="dash-user-services">
           <SectionHeader label="Servicios disponibles" title="¿Cómo podemos ayudarte?" sub="REUNITE ofrece herramientas especializadas para la búsqueda de personas desaparecidas. Selecciona la opción que mejor se adapte a tu situación."/>
-          <div className="reunite-page-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))", gap:"16px" }}>
+          <div className="reunite-page-grid dash-user-actions-grid">
             {actions.map((a,i) => (
-              <GovCard key={i} style={{ padding:"24px" }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"14px" }}>
-                  <div style={{ width:"44px", height:"44px", background:C.tealBg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", border:`1px solid ${C.teal}33` }}>{a.icon}</div>
+              <GovCard key={i} className="dash-user-action-card">
+                <div className="dash-user-action-top">
+                  <div className="dash-user-action-icon">{a.icon}</div>
                   <Tag color={a.wine?C.wine:C.teal}>{a.tag}</Tag>
                 </div>
-                <h3 style={{ fontFamily:font, fontSize:"17px", fontWeight:700, color:C.gray900, marginBottom:"8px", lineHeight:1.2 }}>{a.title}</h3>
-                <p style={{ fontFamily:fontSans, fontSize:"13px", color:C.gray600, lineHeight:1.6, marginBottom:"18px" }}>{a.desc}</p>
+                <h3 className="dash-user-action-title">{a.title}</h3>
+                <p className="dash-user-action-description">{a.desc}</p>
                 <GovBtn variant={a.wine?"wine":"primary"} onClick={()=>setPage(a.page)} full>{a.btn} →</GovBtn>
               </GovCard>
             ))}
@@ -102,19 +99,19 @@ const DashUser = ({ setPage }) => {
         <Divider/>
 
         {/* ── About / protocols ── */}
-        <div className="reunite-page-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"32px", alignItems:"start" }}>
+        <div className="reunite-page-grid dash-user-about-grid">
           <div>
             <SectionHeader label="Sobre la plataforma" title="¿Qué es REUNITE?" accent/>
-            <p style={{ fontFamily:fontSans, fontSize:"14px", color:C.gray700, lineHeight:1.8, marginBottom:"16px" }}>REUNITE es una plataforma tecnológica basada en inteligencia artificial diseñada para mejorar la búsqueda y localización de personas desaparecidas en México. Analiza datos de diversas fuentes, incluyendo bases públicas y reportes de colectivos de búsqueda.</p>
-            <p style={{ fontFamily:fontSans, fontSize:"14px", color:C.gray700, lineHeight:1.8 }}>Su enfoque humanístico garantiza el pleno respeto a la dignidad, privacidad y derechos humanos de las víctimas y sus familias, conforme a la normatividad nacional e internacional vigente.</p>
-            <div style={{ marginTop:"20px", display:"flex", gap:"10px" }}>
+            <p className="dash-user-about-text dash-user-about-text-spaced">REUNITE es una plataforma tecnológica basada en inteligencia artificial diseñada para mejorar la búsqueda y localización de personas desaparecidas en México. Analiza datos de diversas fuentes, incluyendo bases públicas y reportes de colectivos de búsqueda.</p>
+            <p className="dash-user-about-text">Su enfoque humanístico garantiza el pleno respeto a la dignidad, privacidad y derechos humanos de las víctimas y sus familias, conforme a la normatividad nacional e internacional vigente.</p>
+            <div className="dash-user-about-actions">
               <GovBtn variant="ghost" onClick={()=>setPage("statistics")}>Ver Estadísticas</GovBtn>
               <GovBtn variant="secondary" onClick={()=>setPage("register-assoc")}>Acceso Organizaciones</GovBtn>
             </div>
           </div>
-          <div style={{ background:C.cream, border:`1px solid ${C.gray200}`, padding:"20px" }}>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.wine, letterSpacing:".08em", textTransform:"uppercase", marginBottom:"14px", display:"flex", alignItems:"center", gap:"8px" }}>
-              <div style={{ width:"6px", height:"6px", background:C.wine, borderRadius:"50%" }}/>
+          <div className="dash-user-protocols">
+            <div className="dash-user-protocols-heading">
+              <div className="dash-user-protocols-dot"/>
               SISTEMAS Y PROTOCOLOS VIGENTES
             </div>
             {[
@@ -123,10 +120,10 @@ const DashUser = ({ setPage }) => {
               { name:"Comisión Nacional de Búsqueda", desc:"CNB — SEGOB", since:"2017" },
               { name:"RNPDNO", desc:"Registro Nacional Público", since:"2019" },
             ].map((p,i) => (
-              <div key={i} style={{ padding:"10px 0", borderBottom:`1px solid ${C.gray200}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div key={i} className="dash-user-protocol">
                 <div>
-                  <div style={{ fontFamily:fontSans, fontSize:"13px", fontWeight:700, color:C.gray900 }}>{p.name}</div>
-                  <div style={{ fontFamily:fontSans, fontSize:"11px", color:C.gray600 }}>{p.desc}</div>
+                  <div className="dash-user-protocol-name">{p.name}</div>
+                  <div className="dash-user-protocol-description">{p.desc}</div>
                 </div>
                 <Tag color={C.gold}>{p.since}</Tag>
               </div>
@@ -136,16 +133,16 @@ const DashUser = ({ setPage }) => {
       </PageWrap>
 
       {/* ── Emergency banner ── */}
-      <div style={{ background:C.wine, padding:"28px 24px" }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", justifyContent:"space-between", alignItems:"center", gap:"20px", flexWrap:"wrap" }}>
+      <div className="dash-user-emergency">
+        <div className="dash-user-emergency-inner">
           <div>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gold, letterSpacing:".1em", textTransform:"uppercase", marginBottom:"4px" }}>ATENCIÓN DE EMERGENCIA</div>
-            <h3 style={{ fontFamily:font, fontSize:"22px", fontWeight:700, color:C.white }}>¿Es una emergencia? Actúa de inmediato.</h3>
-            <p style={{ fontFamily:fontSans, fontSize:"13px", color:"rgba(255,255,255,.75)", marginTop:"4px" }}>Si una persona acaba de desaparecer, no esperes. Cada minuto es crucial.</p>
+            <div className="dash-user-emergency-eyebrow">ATENCIÓN DE EMERGENCIA</div>
+            <h3 className="dash-user-emergency-title">¿Es una emergencia? Actúa de inmediato.</h3>
+            <p className="dash-user-emergency-text">Si una persona acaba de desaparecer, no esperes. Cada minuto es crucial.</p>
           </div>
-          <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
+          <div className="dash-user-emergency-actions">
             <GovBtn>Llamar al 911</GovBtn>
-            <button onClick={()=>setPage("add-person")} style={{ background:"transparent", border:"1px solid rgba(255,255,255,.5)", color:C.white, padding:"9px 20px", borderRadius:"3px", fontFamily:fontSans, fontSize:"12px", fontWeight:700, letterSpacing:".06em", textTransform:"uppercase", cursor:"pointer" }}>Reportar Inmediatamente</button>
+            <button onClick={()=>setPage("add-person")} className="dash-user-outline-button">Reportar Inmediatamente</button>
           </div>
         </div>
       </div>

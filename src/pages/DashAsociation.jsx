@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { C, font, fontSans } from "../shared/theme";
 import { SectionHeader, GovCard, Tag, GovBtn, Modal } from "../shared/components";
+import "../styles/pages/DashAsociation.css";
 
 const DashAsociation = ({ setPage, onLogout }) => {
   const [logoutModal, setLogoutModal] = useState(false);
@@ -28,39 +29,39 @@ const DashAsociation = ({ setPage, onLogout }) => {
   ];
 
   return (
-    <div style={{ minHeight:"80vh", background:C.gray50 }}>
+    <div className="dash-association-page">
       {/* ── Header ── */}
-      <div style={{ background:C.wine, borderBottom:`3px solid ${C.gold}` }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"20px 24px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+      <div className="dash-association-header">
+        <div className="dash-association-header-inner">
           <div>
-            <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gold, letterSpacing:".1em", textTransform:"uppercase", marginBottom:"4px" }}>PANEL DE CONTROL — ASOCIACIONES</div>
-            <h1 style={{ fontFamily:font, fontSize:"22px", fontWeight:700, color:C.white }}>{assoc.nombre}</h1>
+            <div className="dash-association-eyebrow">PANEL DE CONTROL — ASOCIACIONES</div>
+            <h1 className="dash-association-title">{assoc.nombre}</h1>
           </div>
-          <div style={{ display:"flex", gap:"10px", alignItems:"center" }}>
+          <div className="dash-association-header-actions">
             <Tag color={C.gold}>● Activa y Verificada</Tag>
-            <button onClick={()=>setLogoutModal(true)} style={{ background:"transparent", border:"1px solid rgba(255,255,255,.4)", color:C.white, padding:"9px 20px", borderRadius:"3px", fontFamily:fontSans, fontSize:"12px", fontWeight:700, letterSpacing:".06em", textTransform:"uppercase", cursor:"pointer" }}>Cerrar Sesión</button>
+            <button onClick={()=>setLogoutModal(true)} className="dash-association-logout">Cerrar Sesión</button>
           </div>
         </div>
         {/* Stats bar */}
-        <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 24px 20px", display:"flex", gap:"24px", flexWrap:"wrap" }}>
+        <div className="dash-association-stats">
           {statsLocal.map((s,i) => (
-            <div key={i} style={{ background:"rgba(255,255,255,.1)", padding:"10px 20px", borderLeft:`3px solid ${C.tealL}` }}>
-              <div style={{ fontFamily:font, fontSize:"22px", fontWeight:900, color:C.white }}>{s.n}</div>
-              <div style={{ fontFamily:fontSans, fontSize:"11px", color:"rgba(255,255,255,.7)", textTransform:"uppercase", letterSpacing:".04em" }}>{s.label}</div>
+            <div key={i} className="dash-association-stat">
+              <div className="dash-association-stat-value">{s.n}</div>
+              <div className="dash-association-stat-label">{s.label}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* ── Body ── */}
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"32px 24px" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"300px 1fr", gap:"24px", alignItems:"start" }}>
+      <div className="dash-association-content">
+        <div className="dash-association-layout">
 
           {/* Left: Assoc info card */}
           <div>
-            <div style={{ background:C.white, border:`1px solid ${C.gray200}`, marginBottom:"16px" }}>
-              <div style={{ background:C.gray50, padding:"12px 16px", borderBottom:`1px solid ${C.gray200}`, fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.gray600, letterSpacing:".06em", textTransform:"uppercase" }}>DATOS DE LA ASOCIACIÓN</div>
-              <div style={{ padding:"16px" }}>
+            <div className="dash-association-info-card">
+              <div className="dash-association-card-heading">DATOS DE LA ASOCIACIÓN</div>
+              <div className="dash-association-card-body">
                 {[
                   ["Ciudad de Origen",    assoc.ciudad],
                   ["Representante Legal", assoc.representante],
@@ -70,21 +71,21 @@ const DashAsociation = ({ setPage, onLogout }) => {
                   ["N.° de Integrantes",  assoc.integrantes],
                   ["Fecha de Registro",   assoc.registro],
                 ].map(([k,v]) => (
-                  <div key={k} style={{ padding:"8px 0", borderBottom:`1px solid ${C.gray100}` }}>
-                    <div style={{ fontFamily:fontSans, fontSize:"10px", fontWeight:700, color:C.gray400, textTransform:"uppercase", letterSpacing:".06em" }}>{k}</div>
-                    <div style={{ fontFamily:fontSans, fontSize:"13px", color:C.gray800, fontWeight:500, marginTop:"2px" }}>{v}</div>
+                  <div key={k} className="dash-association-detail">
+                    <div className="dash-association-detail-label">{k}</div>
+                    <div className="dash-association-detail-value">{v}</div>
                   </div>
                 ))}
-                <div style={{ marginTop:"12px" }}><GovBtn full>Editar Información</GovBtn></div>
+                <div className="dash-association-edit"><GovBtn full>Editar Información</GovBtn></div>
               </div>
             </div>
 
             {/* Resources */}
-            <div style={{ background:C.tealBg, border:`1px solid ${C.teal}33`, padding:"16px" }}>
-              <div style={{ fontFamily:fontSans, fontSize:"11px", fontWeight:700, color:C.teal, letterSpacing:".06em", textTransform:"uppercase", marginBottom:"10px" }}>RECURSOS</div>
+            <div className="dash-association-resources">
+              <div className="dash-association-resources-heading">RECURSOS</div>
               {["Manual de Usuario","Normatividad Vigente","Guía de Reportes","Soporte Técnico"].map(l => (
-                <div key={l} style={{ padding:"7px 0", borderBottom:`1px solid ${C.teal}22` }}>
-                  <button style={{ background:"none", border:"none", fontFamily:fontSans, fontSize:"13px", color:C.teal, cursor:"pointer" }}>→ {l}</button>
+                <div key={l} className="dash-association-resource">
+                  <button className="dash-association-resource-button">→ {l}</button>
                 </div>
               ))}
             </div>
@@ -93,15 +94,15 @@ const DashAsociation = ({ setPage, onLogout }) => {
           {/* Right: Tool cards */}
           <div>
             <SectionHeader label="Herramientas" title="Panel de Gestión"/>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
+            <div className="dash-association-tools-grid">
               {tools.map((t,i) => (
-                <GovCard key={i} style={{ padding:"20px" }} onClick={()=>setPage(t.page)}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"12px" }}>
-                    <div style={{ width:"40px", height:"40px", background:C.tealBg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"18px", border:`1px solid ${C.teal}33` }}>{t.icon}</div>
+                <GovCard key={i} className="dash-association-tool-card" onClick={()=>setPage(t.page)}>
+                  <div className="dash-association-tool-top">
+                    <div className="dash-association-tool-icon">{t.icon}</div>
                     <Tag>{t.tag}</Tag>
                   </div>
-                  <h3 style={{ fontFamily:font, fontSize:"15px", fontWeight:700, color:C.gray900, marginBottom:"6px", lineHeight:1.2 }}>{t.title}</h3>
-                  <p style={{ fontFamily:fontSans, fontSize:"12px", color:C.gray600, lineHeight:1.6, marginBottom:"14px" }}>{t.desc}</p>
+                  <h3 className="dash-association-tool-title">{t.title}</h3>
+                  <p className="dash-association-tool-description">{t.desc}</p>
                   <GovBtn full onClick={e=>{e.stopPropagation();setPage(t.page);}}>Acceder →</GovBtn>
                 </GovCard>
               ))}
@@ -112,8 +113,8 @@ const DashAsociation = ({ setPage, onLogout }) => {
 
       {/* Logout modal */}
       <Modal show={logoutModal} onClose={()=>setLogoutModal(false)} title="Confirmar Cierre de Sesión">
-        <p style={{ fontFamily:fontSans, fontSize:"13px", color:C.gray700, marginBottom:"20px", lineHeight:1.7 }}>Estás a punto de cerrar tu sesión en el panel de asociaciones. ¿Deseas continuar?</p>
-        <div style={{ display:"flex", gap:"10px" }}>
+        <p className="dash-association-modal-text">Estás a punto de cerrar tu sesión en el panel de asociaciones. ¿Deseas continuar?</p>
+        <div className="dash-association-modal-actions">
           <GovBtn variant="secondary" onClick={()=>setLogoutModal(false)} full>Cancelar</GovBtn>
           <GovBtn variant="wine" onClick={onLogout} full>Sí, Cerrar Sesión</GovBtn>
         </div>

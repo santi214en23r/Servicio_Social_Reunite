@@ -1,0 +1,11 @@
+.add-person-page {
+  min-height: 80vh;
+  background: #F7F9FB;
+  padding: 32px 24px;
+}
+
+@media (max-width: 640px) {
+  .add-person-page { padding: 24px 16px !important; }
+  .add-person-page__form-grid { grid-template-columns: 1fr !important; }
+  .add-person-page h1 { font-size: 17px !important; }
+}

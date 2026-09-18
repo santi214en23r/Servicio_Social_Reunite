@@ -1,0 +1,40 @@
+.register-association-page {
+  min-height: 80vh;
+  background: #F7F9FB;
+  padding: 40px 24px;
+}
+.register-association-container { max-width: 720px; margin: 0 auto; }
+.register-association-breadcrumb { margin-bottom: 20px; display: flex; gap: 6px; font: 12px var(--font-sans, sans-serif); color: #526273; }
+.register-association-breadcrumb-link, .register-association-link-button, .register-association-back-button { background: none; border: none; color: #005B96; cursor: pointer; font: inherit; }
+.register-association-header { background: #0B3B6E; padding: 24px 28px; }
+.register-association-eyebrow { font: 700 11px var(--font-sans, sans-serif); color: #D59B22; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.register-association-title { font: 700 24px var(--font-display, serif); color: #fff; margin-bottom: 4px; }
+.register-association-intro { font: 13px var(--font-sans, sans-serif); color: rgba(255,255,255,.75); }
+.register-association-panel { background: #fff; border: 1px solid #D7DEE5; border-top: none; }
+.register-association-tabs { display: flex; border-bottom: 1px solid #D7DEE5; background: #F7F9FB; }
+.register-association-tab { flex: 1; padding: 14px; font: 700 12px var(--font-sans, sans-serif); letter-spacing: .04em; text-transform: uppercase; background: transparent; color: #526273; border: none; border-bottom: 3px solid transparent; cursor: pointer; transition: all .2s; }
+.register-association-tab.is-active { background: #fff; color: #0B3B6E; border-bottom-color: #0B3B6E; }
+.register-association-body { padding: 32px 28px; }
+.register-association-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.register-association-login-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.register-association-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; font: 13px var(--font-sans, sans-serif); color: #34495E; }
+.register-association-checkbox input { accent-color: #005B96; }
+.register-association-link-button { font-size: 13px; }
+.register-association-section { margin-bottom: 20px; }
+.register-association-section-heading { font: 700 11px var(--font-sans, sans-serif); color: #0B3B6E; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; padding: 8px 0; border-bottom: 1px solid #D7DEE5; }
+.register-association-file-label { font: 700 12px var(--font-sans, sans-serif); color: #34495E; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+.register-association-file-label span { color: #CC0000; }
+.register-association-file-input { display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px dashed #D7DEE5; padding: 10px 14px; background: #F7F9FB; transition: border-color .2s; font: 12px var(--font-sans, sans-serif); color: #526273; }
+.register-association-file-input:hover { border-color: #005B96; }
+.register-association-file-input input { display: none; }
+.register-association-file-input .has-file { color: #005B96; }
+.register-association-file-icon { font-size: 18px; }
+.register-association-back { text-align: center; margin-top: 16px; }
+.register-association-back-button { color: #526273; font-size: 12px; }
+.register-association-modal-text { font: 13px/1.7 var(--font-sans, sans-serif); color: #34495E; margin-bottom: 16px; }
+
+@media (max-width: 640px) {
+  .register-association-page { padding: 24px 16px; }
+  .register-association-grid { grid-template-columns: 1fr; }
+  .register-association-title { font-size: 20px; }
+}

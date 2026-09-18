@@ -113,7 +113,7 @@ export const GovSelect = ({ label, required, children, value, onChange }) => (
 // ─── InfoBox ─────────────────────────────
 export const InfoBox = ({ type = "info", children }) => {
   const colors = {
-    info:    { bg:"#EFF6FF", border:"#BFDBFE", icon:"ℹ", text:"#1D4ED8" },
+    info:    { bg:C.tealBg, border:C.gray200, icon:"ℹ", text:C.teal },
     warn:    { bg:"#FFFBEB", border:"#FDE68A", icon:"⚠", text:"#92400E" },
     success: { bg:C.tealBg,  border:C.teal+"44", icon:"✓", text:C.teal },
     danger:  { bg:"#FEF2F2", border:"#FECACA", icon:"✕", text:"#DC2626" },

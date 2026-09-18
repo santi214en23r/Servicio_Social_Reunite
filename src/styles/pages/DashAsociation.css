@@ -1,0 +1,43 @@
+.dash-association-page {
+  min-height: 80vh;
+  background: #F7F9FB;
+}
+
+.dash-association-header { background: #0B3B6E; border-bottom: 3px solid #D59B22; }
+.dash-association-header-inner, .dash-association-stats, .dash-association-content { max-width: 1200px; margin: 0 auto; }
+.dash-association-header-inner { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+.dash-association-eyebrow, .dash-association-stat-label, .dash-association-card-heading, .dash-association-detail-label, .dash-association-resources-heading { font-family: var(--font-sans, sans-serif); text-transform: uppercase; letter-spacing: .06em; }
+.dash-association-eyebrow { font-size: 11px; font-weight: 700; color: #D59B22; letter-spacing: .1em; margin-bottom: 4px; }
+.dash-association-title { font-family: var(--font-display, serif); font-size: 22px; font-weight: 700; color: #fff; }
+.dash-association-header-actions, .dash-association-modal-actions { display: flex; gap: 10px; align-items: center; }
+.dash-association-logout { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #fff; padding: 9px 20px; border-radius: 3px; font: 700 12px var(--font-sans, sans-serif); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.dash-association-stats { padding: 0 24px 20px; display: flex; gap: 24px; flex-wrap: wrap; }
+.dash-association-stat { background: rgba(255,255,255,.1); padding: 10px 20px; border-left: 3px solid #1B75B7; }
+.dash-association-stat-value { font: 900 22px var(--font-display, serif); color: #fff; }
+.dash-association-stat-label { font-size: 11px; color: rgba(255,255,255,.7); letter-spacing: .04em; }
+.dash-association-content { padding: 32px 24px; }
+.dash-association-layout { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
+.dash-association-info-card { background: #fff; border: 1px solid #D7DEE5; margin-bottom: 16px; }
+.dash-association-card-heading { background: #F7F9FB; padding: 12px 16px; border-bottom: 1px solid #D7DEE5; font-size: 11px; font-weight: 700; color: #526273; }
+.dash-association-card-body { padding: 16px; }
+.dash-association-detail { padding: 8px 0; border-bottom: 1px solid #EDF1F4; }
+.dash-association-detail-label { font-size: 10px; font-weight: 700; color: #8A98A6; }
+.dash-association-detail-value { font: 500 13px var(--font-sans, sans-serif); color: #20364D; margin-top: 2px; }
+.dash-association-edit { margin-top: 12px; }
+.dash-association-resources { background: #EAF2F8; border: 1px solid rgba(0,91,150,.2); padding: 16px; }
+.dash-association-resources-heading { font-size: 11px; font-weight: 700; color: #005B96; margin-bottom: 10px; }
+.dash-association-resource { padding: 7px 0; border-bottom: 1px solid rgba(0,91,150,.13); }
+.dash-association-resource-button { background: none; border: none; font: 13px var(--font-sans, sans-serif); color: #005B96; cursor: pointer; }
+.dash-association-tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.dash-association-tool-card { padding: 20px; }
+.dash-association-tool-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.dash-association-tool-icon { width: 40px; height: 40px; background: #EAF2F8; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid rgba(0,91,150,.2); }
+.dash-association-tool-title { font: 700 15px/1.2 var(--font-display, serif); color: #102A43; margin-bottom: 6px; }
+.dash-association-tool-description { font: 12px/1.6 var(--font-sans, sans-serif); color: #526273; margin-bottom: 14px; }
+.dash-association-modal-text { font: 13px/1.7 var(--font-sans, sans-serif); color: #34495E; margin-bottom: 20px; }
+.dash-association-modal-actions { align-items: stretch; }
+
+@media (max-width: 760px) {
+  .dash-association-layout, .dash-association-tools-grid { grid-template-columns: 1fr; }
+  .dash-association-title { font-size: 18px; }
+}

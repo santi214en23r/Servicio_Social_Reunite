@@ -1,0 +1,11 @@
+.about-page {
+  min-height: 80vh;
+  background: #F7F9FB;
+  padding: 32px 24px;
+}
+
+@media (max-width: 640px) {
+  .about-page { padding: 24px 16px !important; }
+  .about-page h1 { font-size: 21px !important; }
+  .about-page__stats { grid-template-columns: 1fr !important; }
+}
